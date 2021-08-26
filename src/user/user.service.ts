@@ -15,17 +15,11 @@ export class UserService {
 	) { }
 
 	async register(registerDto: RegisterDto): Promise<void> {
-		let user: User | undefined;
-		try {
-			user = await this.userRepository.findOne({
-				where: {
-					id: registerDto.id,
-				}
-			});
-		} catch (e) {
-			console.log(e);
-			throw new InternalServerErrorException('서버오류');
-		}
+		let user: User | undefined = await this.userRepository.findOne({
+			where: {
+				id: registerDto.id,
+			}
+		});
 
 		if (user !== undefined) {
 			throw new UnauthorizedException('이미 존재하는 아이디입니다');
@@ -43,17 +37,13 @@ export class UserService {
 	}
 
 	async login(loginDto: LoginDto): Promise<string> {
-		let user: User | undefined;
-		try {
-			const hash: string = await this.hashPW(loginDto.pw);
-			user = await this.userRepository.findOne({
-				id: loginDto.id,
-				pw: hash
-			});
-		} catch (e) {
-			console.log(e);
-			throw new InternalServerErrorException('서버 오류');
-		}
+		const hash: string = await this.hashPW(loginDto.pw);
+
+		let user: User | undefined = await this.userRepository.findOne({
+			id: loginDto.id,
+			pw: hash
+		});
+
 		if (user === undefined) {
 			throw new NotFoundException('존재하지 않는 유저입니다');
 		}
@@ -65,10 +55,10 @@ export class UserService {
 		return createHash('sha512').update(pw).digest('base64');
 	}
 
-	async getMyInfo(userId: string): Promise<User> {
+	async getMyInfo(phone: string): Promise<User> {
 		return this.userRepository.findOne({
 			where: {
-				id: userId
+				phone
 			},
 			relations: ['account']
 		})

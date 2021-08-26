@@ -45,7 +45,7 @@ export class UserController {
 	@ApiBearerAuth('x-access-token')
 	@UseGuards(new PasswordGuard())
 	async getMyInfo(@Token() user: User) {
-		const data: User = await this.userService.getMyInfo(user.id);
+		const data: User = await this.userService.getMyInfo(user.phone);
 
 		return {
 			data,

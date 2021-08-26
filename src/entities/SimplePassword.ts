@@ -9,6 +9,9 @@ export default class SimplePassword {
 	@Column()
 	pw!: string;
 
+	@Column()
+	phone!: string;
+
 	@JoinColumn({ name: 'fk_user_id' })
 	@ManyToOne(type => User, {
 		onDelete: 'CASCADE',
