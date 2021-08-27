@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+	Injectable,
+	NotFoundException,
+	UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from 'src/entities/User';
 import { Repository } from 'typeorm';
@@ -15,10 +19,10 @@ export class UserService {
 	) { }
 
 	async register(registerDto: RegisterDto): Promise<void> {
-		let user: User | undefined = await this.userRepository.findOne({
+		const user: User | undefined = await this.userRepository.findOne({
 			where: {
 				id: registerDto.id,
-			}
+			},
 		});
 
 		if (user !== undefined) {
@@ -32,16 +36,16 @@ export class UserService {
 			pw: hash,
 			nick: registerDto.nick,
 			birth: registerDto.birth,
-			phone: registerDto.phone
+			phone: registerDto.phone,
 		});
 	}
 
 	async login(loginDto: LoginDto): Promise<string> {
 		const hash: string = await this.hashPW(loginDto.pw);
 
-		let user: User | undefined = await this.userRepository.findOne({
+		const user: User | undefined = await this.userRepository.findOne({
 			id: loginDto.id,
-			pw: hash
+			pw: hash,
 		});
 
 		if (user === undefined) {
@@ -58,9 +62,9 @@ export class UserService {
 	async getMyInfo(phone: string): Promise<User> {
 		return this.userRepository.findOne({
 			where: {
-				phone
+				phone,
 			},
-			relations: ['account']
-		})
+			relations: ['account'],
+		});
 	}
 }

@@ -4,6 +4,6 @@ import { SendController } from './send.controller';
 
 @Module({
   providers: [SendService],
-  controllers: [SendController]
+  controllers: [SendController],
 })
 export class SendModule {}

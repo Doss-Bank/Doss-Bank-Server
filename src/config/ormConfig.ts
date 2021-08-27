@@ -3,8 +3,8 @@ import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOpti
 import { dbConfig } from './config';
 
 export const config: MysqlConnectionOptions = {
-	type: 'mysql',
-	...dbConfig,
-	entities,
-	synchronize: true
-}
+  type: 'mysql',
+  ...dbConfig,
+  entities,
+  synchronize: true,
+};

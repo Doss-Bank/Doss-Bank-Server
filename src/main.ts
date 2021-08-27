@@ -21,7 +21,7 @@ async function bootstrap() {
         bearerFormat: 'JWT',
         name: 'JWT',
         description: 'Enter JWT token',
-        in: 'header'
+        in: 'header',
       },
       'x-access-token',
     )

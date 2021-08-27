@@ -1,4 +1,7 @@
-import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import {
+	Injectable,
+	UnauthorizedException,
+} from '@nestjs/common';
 import SimplePassword from 'src/entities/SimplePassword';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,10 +22,10 @@ export class PasswordService {
 		const userData: User = await this.userService.getMyInfo(user.id);
 		const hash: string = await this.userService.hashPW(passwordDto.pw);
 
-		let pw: SimplePassword | undefined = await this.pwRepository.findOne({
+		const pw: SimplePassword | undefined = await this.pwRepository.findOne({
 			where: {
-				phone: userData.phone
-			}
+				phone: userData.phone,
+			},
 		});
 
 		if (pw !== undefined) {
@@ -31,7 +34,7 @@ export class PasswordService {
 
 		const data: SimplePassword = await this.pwRepository.create({
 			phone: userData.phone,
-			pw: hash
+			pw: hash,
 		});
 		data.user = userData;
 		await this.pwRepository.save(data);
@@ -40,10 +43,10 @@ export class PasswordService {
 	async isHavePW(user: User): Promise<boolean> {
 		const userData: User = await this.userService.getMyInfo(user.id);
 
-		let pw: SimplePassword | undefined = await this.pwRepository.findOne({
+		const pw: SimplePassword | undefined = await this.pwRepository.findOne({
 			where: {
-				phone: userData.phone
-			}
+				phone: userData.phone,
+			},
 		});
 
 		if (pw !== undefined) {
@@ -57,11 +60,11 @@ export class PasswordService {
 		const userData: User = await this.userService.getMyInfo(user.id);
 		const hash: string = await this.userService.hashPW(data.pw);
 
-		let pw: SimplePassword | undefined = await this.pwRepository.findOne({
+		const pw: SimplePassword | undefined = await this.pwRepository.findOne({
 			where: {
 				phone: userData.phone,
-				pw: hash
-			}
+				pw: hash,
+			},
 		});
 
 		if (pw === undefined) {

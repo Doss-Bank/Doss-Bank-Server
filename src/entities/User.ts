@@ -1,23 +1,23 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
-import Account from "./Account";
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import Account from './Account';
 
 @Entity('user')
 export default class User {
-	@PrimaryColumn()
-	id!: string;
+  @PrimaryColumn()
+  id!: string;
 
-	@Column()
-	pw!: string;
+  @Column()
+  pw!: string;
 
-	@Column()
-	nick!: string;
+  @Column()
+  nick!: string;
 
-	@Column()
-	phone!: string;
+  @Column()
+  phone!: string;
 
-	@Column()
-	birth!: string;
+  @Column()
+  birth!: string;
 
-	@OneToMany(type => Account, account => account.user)
-	account!: Account[];
+  @OneToMany((type) => Account, (account) => account.user)
+  account!: Account[];
 }

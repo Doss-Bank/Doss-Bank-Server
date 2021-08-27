@@ -9,6 +9,6 @@ import { UserService } from 'src/user/user.service';
 @Module({
   imports: [TypeOrmModule.forFeature([SimplePassword, User])],
   providers: [PasswordService, UserService],
-  controllers: [PasswordController]
+  controllers: [PasswordController],
 })
-export class PasswordModule { }
+export class PasswordModule {}
