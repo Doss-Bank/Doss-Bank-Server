@@ -8,6 +8,8 @@ import { TransferModule } from './transfer/transfer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config/ormConfig';
 import { SendModule } from './send/send.module';
+import { APP_FILTER } from '@nestjs/core';
+import CatchException from './lib/errorLib';
 
 @Module({
   imports: [
@@ -19,6 +21,11 @@ import { SendModule } from './send/send.module';
     SendModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: APP_FILTER,
+      useClass: CatchException,
+    }
+  ],
 })
-export class AppModule {}
+export class AppModule { }
