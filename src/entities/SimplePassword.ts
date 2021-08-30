@@ -13,7 +13,7 @@ export default class SimplePassword {
   @PrimaryGeneratedColumn()
   idx!: number;
 
-  @Column()
+  @Column({ select: false })
   pw!: string;
 
   @Column()

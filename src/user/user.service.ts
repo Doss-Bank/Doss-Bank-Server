@@ -8,8 +8,10 @@ import User from 'src/entities/User';
 import { Repository } from 'typeorm';
 import LoginDto from './dto/loginDto';
 import RegisterDto from './dto/registerDto';
-import crypto, { createHash } from 'crypto';
+import { createHash } from 'crypto';
 import { generateAuthToken } from 'src/lib/token';
+import { validateData } from 'src/lib/util/validateData';
+import { isDefined } from 'class-validator';
 
 @Injectable()
 export class UserService {
@@ -25,7 +27,7 @@ export class UserService {
 			},
 		});
 
-		if (user !== undefined) {
+		if (isDefined(user)) {
 			throw new UnauthorizedException('이미 존재하는 아이디입니다');
 		}
 
@@ -48,9 +50,7 @@ export class UserService {
 			pw: hash,
 		});
 
-		if (user === undefined) {
-			throw new NotFoundException('존재하지 않는 유저입니다');
-		}
+		validateData(user);
 
 		return generateAuthToken(user.id);
 	}

@@ -1,7 +1,4 @@
-import {
-	Injectable,
-	UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import SimplePassword from 'src/entities/SimplePassword';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,65 +9,65 @@ import { generateAccessToken } from 'src/lib/token';
 
 @Injectable()
 export class PasswordService {
-	constructor(
-		@InjectRepository(SimplePassword)
-		private pwRepository: Repository<SimplePassword>,
-		private userService: UserService,
-	) { }
+  constructor(
+    @InjectRepository(SimplePassword)
+    private pwRepository: Repository<SimplePassword>,
+    private userService: UserService,
+  ) {}
 
-	async makePassword(user: User, passwordDto: PasswordDto) {
-		const userData: User = await this.userService.getMyInfo(user.id);
-		const hash: string = await this.userService.hashPW(passwordDto.pw);
+  async makePassword(user: User, passwordDto: PasswordDto) {
+    const userData: User = await this.userService.getMyInfo(user.id);
+    const hash: string = await this.userService.hashPW(passwordDto.pw);
 
-		const pw: SimplePassword | undefined = await this.pwRepository.findOne({
-			where: {
-				phone: userData.phone,
-			},
-		});
+    const pw: SimplePassword | undefined = await this.pwRepository.findOne({
+      where: {
+        phone: userData.phone,
+      },
+    });
 
-		if (pw !== undefined) {
-			throw new UnauthorizedException('간편인증번호는 1회만 생성이 가능합니다');
-		}
+    if (pw !== undefined) {
+      throw new UnauthorizedException('간편인증번호는 1회만 생성이 가능합니다');
+    }
 
-		const data: SimplePassword = await this.pwRepository.create({
-			phone: userData.phone,
-			pw: hash,
-		});
-		data.user = userData;
-		await this.pwRepository.save(data);
-	}
+    const data: SimplePassword = await this.pwRepository.create({
+      phone: userData.phone,
+      pw: hash,
+    });
+    data.user = userData;
+    await this.pwRepository.save(data);
+  }
 
-	async isHavePW(user: User): Promise<boolean> {
-		const userData: User = await this.userService.getMyInfo(user.id);
+  async isHavePW(user: User): Promise<boolean> {
+    const userData: User = await this.userService.getMyInfo(user.id);
 
-		const pw: SimplePassword | undefined = await this.pwRepository.findOne({
-			where: {
-				phone: userData.phone,
-			},
-		});
+    const pw: SimplePassword | undefined = await this.pwRepository.findOne({
+      where: {
+        phone: userData.phone,
+      },
+    });
 
-		if (pw !== undefined) {
-			return false;
-		}
+    if (pw !== undefined) {
+      return false;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	async login(user: User, data: PasswordDto): Promise<string> {
-		const userData: User = await this.userService.getMyInfo(user.id);
-		const hash: string = await this.userService.hashPW(data.pw);
+  async login(user: User, data: PasswordDto): Promise<string> {
+    const userData: User = await this.userService.getMyInfo(user.id);
+    const hash: string = await this.userService.hashPW(data.pw);
 
-		const pw: SimplePassword | undefined = await this.pwRepository.findOne({
-			where: {
-				phone: userData.phone,
-				pw: hash,
-			},
-		});
+    const pw: SimplePassword | undefined = await this.pwRepository.findOne({
+      where: {
+        phone: userData.phone,
+        pw: hash,
+      },
+    });
 
-		if (pw === undefined) {
-			throw new UnauthorizedException('비밀번호가 틀렸습니다');
-		}
+    if (pw === undefined) {
+      throw new UnauthorizedException('비밀번호가 틀렸습니다');
+    }
 
-		return await generateAccessToken(userData.phone);
-	}
+    return generateAccessToken(userData.phone);
+  }
 }

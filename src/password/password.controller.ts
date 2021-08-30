@@ -6,6 +6,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import User from 'src/entities/User';
 import { Token } from 'src/lib/token';
 import { AuthGuard } from 'src/middleware/authMiddleware';
@@ -13,6 +14,7 @@ import PasswordDto from './dto/passwordDto';
 import { PasswordService } from './password.service';
 
 @Controller('password')
+@ApiTags('password')
 export class PasswordController {
   constructor(private passwordService: PasswordService) {}
 
