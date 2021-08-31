@@ -17,7 +17,7 @@ export default class Transfer {
   toAccount!: string;
 
   @Column()
-  money!: string;
+  money!: number;
 
   @JoinColumn({ name: 'fk_account_idx' })
   @ManyToOne((type) => Account, {

@@ -6,7 +6,6 @@ import AccountDto from './dto/accountDto';
 import User from 'src/entities/User';
 import { UserService } from 'src/user/user.service';
 import uuid from 'src/lib/uuid';
-import { validateData } from 'src/lib/util/validateData';
 import { isDefined } from 'class-validator';
 
 @Injectable()
@@ -44,7 +43,7 @@ export class AccountService {
     const account: Account = this.accountRepo.create({
       account: uuid(),
       password: await this.userService.hashPW(data.simplePW),
-      name: data.name
+      name: data.name,
     });
     account.user = isUser;
 
@@ -60,7 +59,20 @@ export class AccountService {
       where: {
         user: userData,
       },
-      relations: ['user']
+      relations: ['user'],
+    });
+
+    return accounts;
+  }
+
+  async getAccountByPhone(phone: string): Promise<Account[]> {
+    const user: User = await this.userService.getMyInfo(phone);
+
+    const accounts: Account[] = await this.accountRepo.find({
+      where: {
+        user: user
+      },
+      relations: ['user'],
     });
 
     return accounts;

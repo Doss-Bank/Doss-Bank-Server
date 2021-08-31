@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpCode, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import Account from 'src/entities/Account';
 import User from 'src/entities/User';
@@ -35,6 +43,18 @@ export class AccountController {
       data,
       status: 200,
       message: '자신의 계좌 조회 성공',
+    };
+  }
+
+  @Get('/:phone')
+  @HttpCode(200)
+  async getAccountByPhone(@Param('phone') phone: string) {
+    const data: Account[] = await this.accountService.getAccountByPhone(phone);
+
+    return {
+      data,
+      status: 200,
+      message: '계좌 조회 성공'
     }
   }
 }

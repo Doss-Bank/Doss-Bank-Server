@@ -27,7 +27,7 @@ import { UserService } from './user.service';
 @Controller('user')
 @ApiTags('User')
 export class UserController {
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
   @Post('/register')
   @HttpCode(200)
