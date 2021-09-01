@@ -11,6 +11,7 @@ import { createHash } from 'crypto';
 import { generateAuthToken } from 'src/lib/token';
 import { validateData } from 'src/lib/util/validateData';
 import { isDefined } from 'class-validator';
+import hashPassword from 'src/lib/util/hashPassword';
 
 @Injectable()
 export class UserService {
@@ -30,7 +31,7 @@ export class UserService {
 			throw new UnauthorizedException('이미 존재하는 아이디입니다');
 		}
 
-		const hash: string = await this.hashPW(registerDto.pw);
+		const hash: string = hashPassword(registerDto.pw);
 
 		this.userRepository.save({
 			id: registerDto.id,
@@ -42,7 +43,7 @@ export class UserService {
 	}
 
 	async login(loginDto: LoginDto): Promise<string> {
-		const hash: string = await this.hashPW(loginDto.pw);
+		const hash: string = hashPassword(loginDto.pw);
 
 		const user: User | undefined = await this.userRepository.findOne({
 			id: loginDto.id,
@@ -52,10 +53,6 @@ export class UserService {
 		validateData(user);
 
 		return generateAuthToken(user.id);
-	}
-
-	async hashPW(pw: string): Promise<string> {
-		return createHash('sha512').update(pw).digest('base64');
 	}
 
 	async getMyInfo(phone: string): Promise<User> {
