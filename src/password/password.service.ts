@@ -6,6 +6,7 @@ import User from 'src/entities/User';
 import PasswordDto from './dto/passwordDto';
 import { UserService } from 'src/user/user.service';
 import { generateAccessToken } from 'src/lib/token';
+import hashPassword from 'src/lib/util/hashPassword';
 
 @Injectable()
 export class PasswordService {
@@ -13,11 +14,11 @@ export class PasswordService {
     @InjectRepository(SimplePassword)
     private pwRepository: Repository<SimplePassword>,
     private userService: UserService,
-  ) {}
+  ) { }
 
   async makePassword(user: User, passwordDto: PasswordDto) {
     const userData: User = await this.userService.getMyInfo(user.id);
-    const hash: string = await this.userService.hashPW(passwordDto.pw);
+    const hash: string = hashPassword(passwordDto.pw);
 
     const pw: SimplePassword | undefined = await this.pwRepository.findOne({
       where: {
@@ -55,7 +56,7 @@ export class PasswordService {
 
   async login(user: User, data: PasswordDto): Promise<string> {
     const userData: User = await this.userService.getMyInfo(user.id);
-    const hash: string = await this.userService.hashPW(data.pw);
+    const hash: string = hashPassword(data.pw);
 
     const pw: SimplePassword | undefined = await this.pwRepository.findOne({
       where: {

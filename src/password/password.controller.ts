@@ -16,7 +16,7 @@ import { PasswordService } from './password.service';
 @Controller('password')
 @ApiTags('password')
 export class PasswordController {
-  constructor(private passwordService: PasswordService) {}
+  constructor(private passwordService: PasswordService) { }
 
   @Post('/')
   @HttpCode(200)
