@@ -1,8 +1,20 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export default class TransferDto {
 
 	@IsNotEmpty()
 	@IsString()
-	toAccount!: string;
+	receiveAccountId!: string;
+
+	@IsNotEmpty()
+	@IsString()
+	sendAccountPw!: string;
+
+	@IsNotEmpty()
+	@IsString()
+	sendAccountId!: string;
+
+	@IsNotEmpty()
+	@IsNumber()
+	money!: number;
 }

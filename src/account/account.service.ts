@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import Account from 'src/entities/Account';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,7 @@ import User from 'src/entities/User';
 import { UserService } from 'src/user/user.service';
 import uuid from 'src/lib/uuid';
 import { isDefined } from 'class-validator';
+import hashPassword from 'src/lib/util/hashPassword';
 
 @Injectable()
 export class AccountService {
@@ -42,7 +43,7 @@ export class AccountService {
 
     const account: Account = this.accountRepo.create({
       account: uuid(),
-      password: await this.userService.hashPW(data.simplePW),
+      password: hashPassword(data.simplePW),
       name: data.name,
     });
     account.user = isUser;
@@ -76,5 +77,19 @@ export class AccountService {
     });
 
     return accounts;
+  }
+
+  async getAccountByAccount(accountNum: string): Promise<Account> {
+    const data: Account = await this.accountRepo.findOne({
+      where: {
+        account: "0023003219460"
+      }
+    });
+
+    if (data === undefined || data === null) {
+      throw new NotFoundException('존재하지 않는 계좌입니다');
+    }
+
+    return data;
   }
 }

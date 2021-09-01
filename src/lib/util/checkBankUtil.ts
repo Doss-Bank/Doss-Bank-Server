@@ -2,13 +2,13 @@ import { BadRequestException } from "@nestjs/common";
 import { TransferTo } from "src/enum/account";
 
 export default (account: string): TransferTo => {
-	const bankCode = account.split('-');
+	const bankCode: string = account.slice(0, 3);
 
-	if (bankCode[0].length < 3) {
+	if (bankCode.length < 3) {
 		throw new BadRequestException('올바르지 않은 계좌번호입니다');
 	}
 
-	switch (bankCode[0]) {
+	switch (bankCode) {
 		case '001':
 			return TransferTo.Jungbin;
 		case '002':

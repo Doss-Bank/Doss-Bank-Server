@@ -20,12 +20,18 @@ export default class Account {
   account!: string;
 
   @ApiProperty()
-  @Column({ select: false })
+  @Column()
   password!: string;
 
   @ApiProperty()
   @Column()
   name!: string;
+
+  @ApiProperty()
+  @Column({
+    default: 0
+  })
+  money!: number;
 
   @JoinColumn({ name: 'fk_user_id' })
   @ManyToOne((type) => User, {

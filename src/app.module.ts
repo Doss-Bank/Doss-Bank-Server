@@ -31,4 +31,4 @@ import CatchException from './lib/errLib';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
