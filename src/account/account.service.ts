@@ -82,7 +82,7 @@ export class AccountService {
   async getAccountByAccount(accountNum: string): Promise<Account> {
     const data: Account = await this.accountRepo.findOne({
       where: {
-        account: "0023003219460"
+        account: accountNum,
       }
     });
 
