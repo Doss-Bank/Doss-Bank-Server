@@ -24,7 +24,7 @@ export class AccountService {
       throw new BadRequestException('계정정보의 전화번호와 다릅니다');
     }
 
-    let acc;
+    let acc: string;
     while (true) {
       acc = uuid();
 
@@ -43,7 +43,7 @@ export class AccountService {
 
     const account: Account = this.accountRepo.create({
       account: uuid(),
-      password: hashPassword(data.simplePW),
+      password: hashPassword(data.accountPW),
       name: data.name,
     });
     account.user = isUser;

@@ -5,7 +5,7 @@ export default class AccountDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
-  simplePW!: string;
+  accountPW!: string;
 
   @IsNotEmpty()
   @IsString()
