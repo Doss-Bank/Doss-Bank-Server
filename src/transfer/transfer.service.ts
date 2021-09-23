@@ -31,7 +31,7 @@ export class TransferService {
       throw new ForbiddenException('본인 계좌에는 송금할 수 없습니다.');
     }
 
-    let account: Account = await this.accountService.getAccountByAccount(data.receiveAccountId);
+    let account: Account = await this.accountService.getAccountByAccount(data.sendAccountId);
     const hashPW: string = hashPassword(data.sendAccountPw);
 
     if (account.password !== hashPW) {
@@ -77,10 +77,6 @@ export class TransferService {
     const afterMoney: number = account.money + data.money;
 
     account.money = afterMoney;
-
-    // await this.connection.transaction('SERIALIZABLE', async manager => {
-    //   account = await this.accountRepo.saveAccount(manager, account);
-    // });
 
     account = await this.atRepo.save(account);
 
