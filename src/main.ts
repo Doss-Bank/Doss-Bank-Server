@@ -28,7 +28,6 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix('api');
   app.use('/public', express.static(join(__dirname, '../public')));
   await app.listen(PORT);
 }
