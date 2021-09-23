@@ -1,5 +1,5 @@
 export enum TransferTo {
-  Haeyoon = 'http://34.64.79.162:8080/api/transfer/get',
+  Haeyoon = 'http://localhost:8080/api/transfer/get',
   Jungbin = 'http://34.64.251.169:8081/remittance/receive',
   Minkyun = '',
   Jungmin = '',
