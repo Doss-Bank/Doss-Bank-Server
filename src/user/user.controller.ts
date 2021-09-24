@@ -12,7 +12,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import User from 'src/entities/User';
-import BaseResponse from 'src/lib/response/BaseResponse';
+import { BaseResponse } from 'src/lib/response/BaseResponse';
 import { Token } from 'src/lib/token';
 import { PasswordGuard } from 'src/middleware/authMiddleware';
 import LoginDto from './dto/loginDto';
@@ -54,9 +54,13 @@ export class UserController {
   @ApiOperation({ summary: '나의 정보 조회' })
   @ApiBearerAuth('access-token')
   @UseGuards(new PasswordGuard())
-  async getMyInfo(@Token() user: User): Promise<BaseResponse<User>> {
+  async getMyInfo(@Token() user: User) {
     const data: User = await this.userService.getMyInfo(user.phone);
 
-    return new BaseResponse(200, "조회 성공", data);
+    return {
+      status: 200,
+      message: '조회 성공',
+      data: data
+    }
   }
 }
