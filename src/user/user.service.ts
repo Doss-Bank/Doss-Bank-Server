@@ -1,4 +1,6 @@
 import {
+	forwardRef,
+	Inject,
 	Injectable,
 	UnauthorizedException,
 } from '@nestjs/common';
@@ -7,17 +9,21 @@ import User from 'src/entities/User';
 import { Repository } from 'typeorm';
 import LoginDto from './dto/loginDto';
 import RegisterDto from './dto/registerDto';
-import { createHash } from 'crypto';
-import { generateAuthToken } from 'src/lib/token';
+import { generateAccessToken } from 'src/lib/token';
 import { validateData } from 'src/lib/util/validateData';
 import { isDefined } from 'class-validator';
 import hashPassword from 'src/lib/util/hashPassword';
+import { ILogin } from 'src/interface/ILogin';
+import SimplePassword from 'src/entities/SimplePassword';
+import { PasswordService } from 'src/password/password.service';
 
 @Injectable()
 export class UserService {
 	constructor(
 		@InjectRepository(User)
 		private userRepository: Repository<User>,
+		@Inject(forwardRef(() => PasswordService))
+		private pwService: PasswordService,
 	) { }
 
 	async register(registerDto: RegisterDto): Promise<void> {
@@ -42,7 +48,7 @@ export class UserService {
 		});
 	}
 
-	async login(loginDto: LoginDto): Promise<string> {
+	async login(loginDto: LoginDto): Promise<ILogin> {
 		const hash: string = hashPassword(loginDto.pw);
 
 		const user: User | undefined = await this.userRepository.findOne({
@@ -52,7 +58,13 @@ export class UserService {
 
 		validateData(user);
 
-		return generateAuthToken(user.id);
+		const token: string = generateAccessToken(user.phone);
+		const simpleId: string = await this.pwService.getId(user.phone);
+
+		return {
+			simpleId,
+			token,
+		}
 	}
 
 	async getMyInfo(phone: string): Promise<User> {

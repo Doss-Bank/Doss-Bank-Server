@@ -8,13 +8,17 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import User from 'src/entities/User';
-import { BaseResponse } from 'src/lib/response/BaseResponse';
+import { ILogin } from 'src/interface/ILogin';
+import BaseResponse from 'src/lib/response/BaseResponse';
+import LoginResponse from 'src/lib/response/user/LoginResponse';
 import { Token } from 'src/lib/token';
-import { PasswordGuard } from 'src/middleware/authMiddleware';
+import { AuthGuard } from 'src/middleware/authMiddleware';
 import LoginDto from './dto/loginDto';
 import RegisterDto from './dto/registerDto';
 import { UserService } from './user.service';
@@ -27,6 +31,8 @@ export class UserController {
   @Post('/register')
   @HttpCode(200)
   @ApiOperation({ summary: '회원가입' })
+  @ApiOkResponse({ description: "회원가입 성공", type: BaseResponse })
+  @ApiUnauthorizedResponse({ description: '이미 존재하는 계정' })
   async Register(@Body() registerDto: RegisterDto) {
     await this.userService.register(registerDto);
 
@@ -39,8 +45,9 @@ export class UserController {
   @Post('/login')
   @HttpCode(200)
   @ApiOperation({ summary: '로그인' })
+  @ApiOkResponse({ description: '로그인 성공', type: LoginResponse })
   async Login(@Body() loginDto: LoginDto) {
-    const token: string = await this.userService.login(loginDto);
+    const token: ILogin = await this.userService.login(loginDto);
 
     return {
       token,
@@ -52,8 +59,8 @@ export class UserController {
   @Get('/')
   @HttpCode(200)
   @ApiOperation({ summary: '나의 정보 조회' })
-  @ApiBearerAuth('access-token')
-  @UseGuards(new PasswordGuard())
+  @ApiBearerAuth('authorization')
+  @UseGuards(new AuthGuard())
   async getMyInfo(@Token() user: User) {
     const data: User = await this.userService.getMyInfo(user.phone);
 
