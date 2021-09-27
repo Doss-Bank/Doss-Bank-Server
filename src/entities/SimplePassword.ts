@@ -13,6 +13,9 @@ export default class SimplePassword {
   @PrimaryGeneratedColumn()
   idx!: number;
 
+  @Column()
+  id!: string;
+
   @Column({ select: false })
   pw!: string;
 
