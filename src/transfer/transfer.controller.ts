@@ -1,8 +1,5 @@
 import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import User from 'src/entities/User';
-import { Token } from 'src/lib/token';
-import { PasswordGuard } from 'src/middleware/authMiddleware';
 import TransferDto from './dto/transferDto';
 import { TransferService } from './transfer.service';
 

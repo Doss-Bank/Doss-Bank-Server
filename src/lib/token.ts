@@ -10,14 +10,6 @@ export const Token = createParamDecorator(
   },
 );
 
-export const generateAuthToken = (id: string): string => {
-  const payload = {
-    id,
-  };
-
-  return jwt.sign(payload, JWT_SECRET);
-};
-
 export const generateAccessToken = (phone: string): string => {
   const payload = {
     phone,

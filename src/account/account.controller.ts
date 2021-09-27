@@ -11,7 +11,7 @@ import { ApiTags } from '@nestjs/swagger';
 import Account from 'src/entities/Account';
 import User from 'src/entities/User';
 import { Token } from 'src/lib/token';
-import { PasswordGuard } from 'src/middleware/authMiddleware';
+import { AuthGuard } from 'src/middleware/authMiddleware';
 import { AccountService } from './account.service';
 import AccountDto from './dto/accountDto';
 
@@ -22,7 +22,7 @@ export class AccountController {
 
   @Post('/')
   @HttpCode(200)
-  @UseGuards(new PasswordGuard())
+  @UseGuards(new AuthGuard())
   async createAccount(@Body() data: AccountDto, @Token() user: User) {
     const account = await this.accountService.createAccount(data, user);
 
@@ -35,7 +35,7 @@ export class AccountController {
 
   @Get('/')
   @HttpCode(200)
-  @UseGuards(new PasswordGuard())
+  @UseGuards(new AuthGuard())
   async getMyAccounts(@Token() user: User) {
     const data: Account[] = await this.accountService.getMyAccounts(user);
 
