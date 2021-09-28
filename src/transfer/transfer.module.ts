@@ -9,10 +9,12 @@ import User from 'src/entities/User';
 import { UserService } from 'src/user/user.service';
 import AccountRepository from 'src/account/account.repository';
 import TransferRepository from './transfer.repository';
+import { PasswordService } from 'src/password/password.service';
+import SimplePassword from 'src/entities/SimplePassword';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Transfer, Account, User])],
-  providers: [TransferService, AccountService, UserService, AccountRepository, TransferRepository],
+  imports: [TypeOrmModule.forFeature([Transfer, Account, User, SimplePassword])],
+  providers: [TransferService, AccountService, UserService, AccountRepository, TransferRepository, PasswordService],
   controllers: [TransferController],
 })
 export class TransferModule { }
