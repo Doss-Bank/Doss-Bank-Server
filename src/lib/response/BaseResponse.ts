@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export abstract class BaseResponse {
+export default class BaseResponse<T> {
   @ApiProperty({
     default: 200,
   })
@@ -8,4 +8,16 @@ export abstract class BaseResponse {
 
   @ApiProperty()
   message: string;
+
+  data?: T;
+
+  constructor(
+    status: number,
+    message: string,
+    data?: T
+  ) {
+    this.status = status;
+    this.message = message;
+    this.data = data;
+  }
 }
