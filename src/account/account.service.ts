@@ -5,9 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import AccountDto from './dto/accountDto';
 import User from 'src/entities/User';
 import { UserService } from 'src/user/user.service';
-import uuid from 'src/lib/uuid';
 import { isDefined } from 'class-validator';
 import hashPassword from 'src/lib/util/hashPassword';
+import generateAccount from 'src/lib/uuid';
 
 @Injectable()
 export class AccountService {
@@ -26,7 +26,7 @@ export class AccountService {
 
     let acc: string;
     while (true) {
-      acc = uuid();
+      acc = generateAccount();
 
       const isExist: Account | undefined = await this.accountRepo.findOne({
         where: {
@@ -42,7 +42,7 @@ export class AccountService {
     }
 
     const account: Account = this.accountRepo.create({
-      account: uuid(),
+      account: acc,
       password: hashPassword(data.accountPW),
       name: data.name,
     });
