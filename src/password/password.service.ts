@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import SimplePassword from 'src/entities/SimplePassword';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,13 +7,15 @@ import PasswordDto from './dto/passwordDto';
 import { UserService } from 'src/user/user.service';
 import { generateAccessToken } from 'src/lib/token';
 import hashPassword from 'src/lib/util/hashPassword';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class PasswordService {
   constructor(
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
     @InjectRepository(SimplePassword)
     private pwRepository: Repository<SimplePassword>,
-    private userService: UserService,
   ) { }
 
   async makePassword(user: User, passwordDto: PasswordDto) {
@@ -30,7 +32,10 @@ export class PasswordService {
       throw new UnauthorizedException('간편인증번호는 1회만 생성이 가능합니다');
     }
 
+    const id: string = uuid();
+
     const data: SimplePassword = await this.pwRepository.create({
+      id: id,
       phone: userData.phone,
       pw: hash,
     });
@@ -55,7 +60,7 @@ export class PasswordService {
   }
 
   async login(user: User, data: PasswordDto): Promise<string> {
-    const userData: User = await this.userService.getMyInfo(user.id);
+    const userData: User = await this.userService.getMyInfo(user.phone);
     const hash: string = hashPassword(data.pw);
 
     const pw: SimplePassword | undefined = await this.pwRepository.findOne({
@@ -70,5 +75,19 @@ export class PasswordService {
     }
 
     return generateAccessToken(userData.phone);
+  }
+
+  async getId(phone: string): Promise<string> {
+    const data: SimplePassword | undefined = await this.pwRepository.findOne({
+      where: {
+        phone: phone
+      }
+    });
+
+    if (data === undefined) {
+      throw new NotFoundException('정보를 찾을 수 없습니다');
+    }
+
+    return data.id;
   }
 }
