@@ -8,6 +8,7 @@ import { UserService } from 'src/user/user.service';
 import { generateAccessToken } from 'src/lib/token';
 import hashPassword from 'src/lib/util/hashPassword';
 import { v4 as uuid } from 'uuid';
+import PasswordLoginDto from './dto/loginDto';
 
 @Injectable()
 export class PasswordService {
@@ -59,13 +60,12 @@ export class PasswordService {
     return true;
   }
 
-  async login(user: User, data: PasswordDto): Promise<string> {
-    const userData: User = await this.userService.getMyInfo(user.phone);
+  async login(data: PasswordLoginDto): Promise<string> {
     const hash: string = hashPassword(data.pw);
 
     const pw: SimplePassword | undefined = await this.pwRepository.findOne({
       where: {
-        phone: userData.phone,
+        id: data.id,
         pw: hash,
       },
     });
@@ -74,7 +74,9 @@ export class PasswordService {
       throw new UnauthorizedException('비밀번호가 틀렸습니다');
     }
 
-    return generateAccessToken(userData.phone);
+    const user: User = await this.userService.getById(pw.userId);
+
+    return generateAccessToken(user.phone);
   }
 
   async getId(phone: string): Promise<string> {
