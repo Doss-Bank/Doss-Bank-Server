@@ -2,6 +2,7 @@ import {
 	forwardRef,
 	Inject,
 	Injectable,
+	NotFoundException,
 	UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -74,5 +75,19 @@ export class UserService {
 			},
 			relations: ['account'],
 		});
+	}
+
+	async getById(id: string): Promise<User> {
+		const data: User | undefined = await this.userRepository.findOne({
+			where: {
+				id: id
+			}
+		});
+
+		if (data === undefined) {
+			throw new NotFoundException("존재하지 않는 유저");
+		}
+
+		return data;
 	}
 }
