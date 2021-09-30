@@ -47,10 +47,10 @@ export class UserController {
   @ApiOperation({ summary: '로그인' })
   @ApiOkResponse({ description: '로그인 성공', type: LoginResponse })
   async Login(@Body() loginDto: LoginDto) {
-    const token: ILogin = await this.userService.login(loginDto);
+    const data: ILogin = await this.userService.login(loginDto);
 
     return {
-      token,
+      data,
       status: 200,
       message: '로그인 성공',
     };
