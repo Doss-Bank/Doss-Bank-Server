@@ -10,6 +10,7 @@ import { ApiTags } from '@nestjs/swagger';
 import User from 'src/entities/User';
 import { Token } from 'src/lib/token';
 import { AuthGuard } from 'src/middleware/authMiddleware';
+import PasswordLoginDto from './dto/loginDto';
 import PasswordDto from './dto/passwordDto';
 import { PasswordService } from './password.service';
 
@@ -47,10 +48,9 @@ export class PasswordController {
   @HttpCode(200)
   @UseGuards(new AuthGuard())
   async loginInSimplePassword(
-    @Token() user: User,
-    @Body() passwordDto: PasswordDto,
+    @Body() passwordDto: PasswordLoginDto,
   ) {
-    const token: string = await this.passwordService.login(user, passwordDto);
+    const token: string = await this.passwordService.login(passwordDto);
 
     return {
       token,
