@@ -20,7 +20,9 @@ export default class Account {
   account!: string;
 
   @ApiProperty()
-  @Column()
+  @Column({
+    select: false
+  })
   password!: string;
 
   @ApiProperty()
