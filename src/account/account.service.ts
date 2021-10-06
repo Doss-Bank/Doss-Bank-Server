@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import Account from 'src/entities/Account';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,10 +19,6 @@ export class AccountService {
 
   async createAccount(data: AccountDto, user: User): Promise<string> {
     const isUser: User = await this.userService.getMyInfo(user.phone);
-
-    if (isUser.phone !== data.phone) {
-      throw new BadRequestException('계정정보의 전화번호와 다릅니다');
-    }
 
     let acc: string;
     while (true) {
