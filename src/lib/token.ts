@@ -19,6 +19,7 @@ export const generateAccessToken = (phone: string): string => {
   const option: JwtSignOptions = {
     issuer: 'Doss',
     subject: 'token',
+    expiresIn: '1 hour'
   }
 
   return jwt.sign(payload, JWT_SECRET);
@@ -31,10 +32,11 @@ export const generateRegisterToken = (id: string): string => {
 
   const option: JwtSignOptions = {
     issuer: "Doss",
-    subject: 'token'
+    subject: 'token',
+    expiresIn: '5 min'
   }
 
-  return jwt.sign(payload, JWT_SECRET);
+  return jwt.sign(payload, JWT_SECRET, option);
 }
 
 export const decodedToken = (token: string) => {
