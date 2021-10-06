@@ -35,7 +35,7 @@ export class PasswordService {
 
     const id: string = uuid();
 
-    const data: SimplePassword = await this.pwRepository.create({
+    const data: SimplePassword = this.pwRepository.create({
       id: id,
       phone: userData.phone,
       pw: hash,
