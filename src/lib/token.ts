@@ -13,7 +13,7 @@ export const Token = createParamDecorator(
 
 export const generateAccessToken = (phone: string): string => {
   const payload = {
-    phone,
+    phone
   };
 
   const option: JwtSignOptions = {
@@ -23,6 +23,19 @@ export const generateAccessToken = (phone: string): string => {
 
   return jwt.sign(payload, JWT_SECRET);
 };
+
+export const generateRegisterToken = (id: string): string => {
+  const payload = {
+    id,
+  }
+
+  const option: JwtSignOptions = {
+    issuer: "Doss",
+    subject: 'token'
+  }
+
+  return jwt.sign(payload, JWT_SECRET);
+}
 
 export const decodedToken = (token: string) => {
   return jwt.decode(token);
