@@ -46,7 +46,6 @@ export class PasswordController {
 
   @Post('/login')
   @HttpCode(200)
-  @UseGuards(new AuthGuard())
   async loginInSimplePassword(
     @Body() passwordDto: PasswordLoginDto,
   ) {
