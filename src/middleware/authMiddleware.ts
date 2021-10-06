@@ -27,13 +27,14 @@ export class AuthGuard implements CanActivate {
       const verify: User = tokenLib.verifyToken(token) as User;
       return verify;
     } catch (error) {
+      console.log(error.message);
       switch (error.message) {
-        case 'INVALID_TOKEN':
+        case 'invalid signature':
         case 'TOKEN_IS_ARRAY':
         case 'NO_USER':
           throw new UnauthorizedException('유효하지 않은 토큰');
 
-        case 'EXPIRED_TOKEN':
+        case 'jwt expired':
           throw new UnauthorizedException('만료된 토큰');
 
         default:
