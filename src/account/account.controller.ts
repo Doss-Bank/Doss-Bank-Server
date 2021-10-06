@@ -7,9 +7,11 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import Account from 'src/entities/Account';
 import User from 'src/entities/User';
+import CreateAccountRes from 'src/lib/response/account/CreateAccountRes';
+import GetMyAccountInfoRes from 'src/lib/response/account/GetMyAccountInfoRes';
 import { Token } from 'src/lib/token';
 import { AuthGuard } from 'src/middleware/authMiddleware';
 import { AccountService } from './account.service';
@@ -23,27 +25,21 @@ export class AccountController {
   @Post('/')
   @HttpCode(200)
   @UseGuards(new AuthGuard())
+  @ApiOkResponse({ description: '계좌 생성 성공', type: CreateAccountRes })
   async createAccount(@Body() data: AccountDto, @Token() user: User) {
     const account = await this.accountService.createAccount(data, user);
 
-    return {
-      account,
-      status: 200,
-      message: '계좌 생성 성공',
-    };
+    return new CreateAccountRes(200, "계좌 생성 성공", { account })
   }
 
   @Get('/')
   @HttpCode(200)
   @UseGuards(new AuthGuard())
+  @ApiOkResponse({ description: '자신의 계좌 조회 성공', type: GetMyAccountInfoRes })
   async getMyAccounts(@Token() user: User) {
     const data: Account[] = await this.accountService.getMyAccounts(user);
 
-    return {
-      data,
-      status: 200,
-      message: '자신의 계좌 조회 성공',
-    };
+    return new GetMyAccountInfoRes(200, "자신의 계좌 조회 성공", data)
   }
 
   @Get('/:phone')

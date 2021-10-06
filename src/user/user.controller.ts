@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -34,7 +35,7 @@ export class UserController {
   @HttpCode(200)
   @ApiOperation({ summary: '회원가입' })
   @ApiOkResponse({ description: "회원가입 성공", type: RegisterResponse })
-  @ApiUnauthorizedResponse({ description: '이미 존재하는 계정' })
+  @ApiUnauthorizedResponse({ description: '이미 존재하는 아이디' })
   async Register(@Body() registerDto: RegisterDto) {
     const token: ResToken = await this.userService.register(registerDto);
 
@@ -45,6 +46,7 @@ export class UserController {
   @HttpCode(200)
   @ApiOperation({ summary: '로그인' })
   @ApiOkResponse({ description: '로그인 성공', type: LoginResponse })
+  @ApiNotFoundResponse({ description: '사용자 정보가 없음' })
   async Login(@Body() loginDto: LoginDto) {
     const data: ILogin = await this.userService.login(loginDto);
 
