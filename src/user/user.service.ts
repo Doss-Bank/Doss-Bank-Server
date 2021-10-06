@@ -10,13 +10,13 @@ import User from 'src/entities/User';
 import { Repository } from 'typeorm';
 import LoginDto from './dto/loginDto';
 import RegisterDto from './dto/registerDto';
-import { generateAccessToken } from 'src/lib/token';
+import { generateAccessToken, generateRegisterToken } from 'src/lib/token';
 import { validateData } from 'src/lib/util/validateData';
 import { isDefined } from 'class-validator';
 import hashPassword from 'src/lib/util/hashPassword';
 import { ILogin } from 'src/interface/ILogin';
-import SimplePassword from 'src/entities/SimplePassword';
 import { PasswordService } from 'src/password/password.service';
+import { ResToken } from 'src/lib/response/user/ResponseData';
 
 @Injectable()
 export class UserService {
@@ -27,7 +27,7 @@ export class UserService {
 		private pwService: PasswordService,
 	) { }
 
-	async register(registerDto: RegisterDto): Promise<void> {
+	async register(registerDto: RegisterDto): Promise<ResToken> {
 		const user: User | undefined = await this.userRepository.findOne({
 			where: {
 				id: registerDto.id,
@@ -40,13 +40,19 @@ export class UserService {
 
 		const hash: string = hashPassword(registerDto.pw);
 
-		this.userRepository.save({
+		await this.userRepository.save({
 			id: registerDto.id,
 			pw: hash,
 			nick: registerDto.nick,
 			birth: registerDto.birth,
 			phone: registerDto.phone,
 		});
+
+		const token: string = generateRegisterToken(registerDto.id);
+
+		return {
+			token,
+		};
 	}
 
 	async login(loginDto: LoginDto): Promise<ILogin> {
@@ -60,7 +66,7 @@ export class UserService {
 		validateData(user);
 
 		const token: string = generateAccessToken(user.phone);
-		const simpleId: string = await this.pwService.getId(user.phone);
+		const simpleId: string | undefined = await this.pwService.getId(user.phone);
 
 		return {
 			simpleId,
