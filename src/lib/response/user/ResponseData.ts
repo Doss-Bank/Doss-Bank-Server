@@ -28,6 +28,8 @@ export class GetUserData {
 	@ApiProperty()
 	public birth: string;
 
-	@ApiProperty()
+	@ApiProperty({
+		type: () => [Account]
+	})
 	public account: Account[];
 }
