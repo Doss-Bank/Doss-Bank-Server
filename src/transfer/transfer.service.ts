@@ -7,6 +7,7 @@ import { AccountService } from 'src/account/account.service';
 import Account from 'src/entities/Account';
 import Transfer from 'src/entities/Transfer';
 import { TransferTo } from 'src/enum/account';
+import { TransferType } from 'src/enum/Transfer';
 import checkBankUtil from 'src/lib/util/checkBankUtil';
 import hashPassword from 'src/lib/util/hashPassword';
 import { Connection, Repository } from 'typeorm';
@@ -65,7 +66,8 @@ export class TransferService {
 
     const createTransfer: Transfer = this.tfRepo.create({
       toAccount: data.receiveAccountId,
-      money: data.money
+      money: data.money,
+      type: TransferType.SEND
     });
     createTransfer.account = account;
     await this.tfRepo.save(createTransfer);
@@ -83,6 +85,7 @@ export class TransferService {
     const createTransfer: Transfer = this.tfRepo.create({
       toAccount: data.receiveAccountId,
       money: data.money,
+      type: TransferType.RECIEVE
     });
     createTransfer.account = account;
     await this.tfRepo.save(createTransfer);

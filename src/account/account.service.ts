@@ -41,6 +41,7 @@ export class AccountService {
       account: acc,
       password: hashPassword(data.accountPW),
       name: data.name,
+      money: 10000
     });
     account.user = isUser;
 
@@ -77,6 +78,7 @@ export class AccountService {
 
   async getAccountByAccount(accountNum: string): Promise<Account> {
     const data: Account = await this.accountRepo.findOne({
+      select: ["idx", "account", "money", "password"],
       where: {
         account: accountNum,
       }

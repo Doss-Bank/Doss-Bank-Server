@@ -1,3 +1,4 @@
+import { TransferType } from 'src/enum/Transfer';
 import {
   Column,
   Entity,
@@ -28,4 +29,10 @@ export default class Transfer {
 
   @RelationId((transfer: Transfer) => transfer.account)
   accountIdx!: number;
+
+  @Column({
+    name: 'type',
+    type: 'varchar'
+  })
+  type: TransferType;
 }
