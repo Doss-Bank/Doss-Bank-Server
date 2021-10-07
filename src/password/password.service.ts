@@ -20,7 +20,7 @@ export class PasswordService {
   ) { }
 
   async makePassword(user: User, passwordDto: PasswordDto) {
-    const userData: User = await this.userService.getMyInfo(user.id);
+    const userData: User = await this.userService.getById(user.id);
     const hash: string = hashPassword(passwordDto.pw);
 
     const pw: SimplePassword | undefined = await this.pwRepository.findOne({
@@ -45,7 +45,7 @@ export class PasswordService {
   }
 
   async isHavePW(user: User): Promise<boolean> {
-    const userData: User = await this.userService.getMyInfo(user.id);
+    const userData: User = await this.userService.getMyInfo(user.phone);
 
     const pw: SimplePassword | undefined = await this.pwRepository.findOne({
       where: {
@@ -71,7 +71,7 @@ export class PasswordService {
     });
 
     if (pw === undefined) {
-      throw new UnauthorizedException('비밀번호가 틀렸습니다');
+      throw new UnauthorizedException('존재하지 않는 유저 정보');
     }
 
     const user: User = await this.userService.getById(pw.userId);

@@ -77,7 +77,7 @@ export class UserService {
 	async getMyInfo(phone: string): Promise<User> {
 		return this.userRepository.findOne({
 			where: {
-				phone,
+				phone: phone
 			},
 			relations: ['account'],
 		});
