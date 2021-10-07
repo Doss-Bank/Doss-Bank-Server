@@ -44,13 +44,10 @@ export class AccountController {
 
   @Get('/:phone')
   @HttpCode(200)
+  @ApiOkResponse({ description: '계좌 조회 성공', type: GetMyAccountInfoRes })
   async getAccountByPhone(@Param('phone') phone: string) {
     const data: Account[] = await this.accountService.getAccountByPhone(phone);
 
-    return {
-      data,
-      status: 200,
-      message: '계좌 조회 성공'
-    }
+    return new GetMyAccountInfoRes(200, "계좌 조회 성공", data);
   }
 }
