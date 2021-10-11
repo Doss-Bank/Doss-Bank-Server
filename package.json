@@ -23,6 +23,7 @@
   "dependencies": {
     "@nestjs/common": "^8",
     "@nestjs/core": "^8",
+    "@nestjs/event-emitter": "^1.0.0",
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/platform-express": "^7.6.13",
     "@nestjs/swagger": "^5.0.9",
@@ -37,7 +38,7 @@
     "mysql2": "^2.2.5",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7",
+    "rxjs": "^7.3.0",
     "swagger-ui-express": "^4.1.6",
     "typeorm": "^0.2.34",
     "uuid": "^8.3.2"
