@@ -9,11 +9,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config/ormConfig';
 import { APP_FILTER } from '@nestjs/core';
 import { ProductModule } from './product/product.module';
+import { SseModule } from './sse/sse.module';
 import CatchException from './lib/errLib';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(config),
+    SseModule,
     UserModule,
     PasswordModule,
     AccountModule,
