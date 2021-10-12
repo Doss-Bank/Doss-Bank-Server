@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import Account from 'src/entities/Account';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -89,5 +89,37 @@ export class AccountService {
     }
 
     return data;
+  }
+
+  async getTotal(user: User): Promise<number> {
+    const isAdmin: User = await this.userService.getMyInfo(user.phone);
+
+    if (isAdmin.id !== "admin") {
+      throw new UnauthorizedException("권한이 없습니다");
+    }
+
+    return this.accountRepo.createQueryBuilder()
+      .select('SUM(money)', "money")
+      .getRawOne();
+  }
+
+  async getUserMoney(user: User, userId: string): Promise<Account> {
+    const isUser: User | undefined = await this.userService.getMyInfo(user.phone);
+
+    if (isUser === undefined) {
+      throw new NotFoundException('존재하지 않는 유저');
+    }
+
+    if (isUser.id !== "admin") {
+      throw new UnauthorizedException('권한이 없습니다');
+    }
+
+    const account: Account = await this.accountRepo.createQueryBuilder('account')
+      .select("SUM(account.money)", "money")
+      .addSelect("COUNT(*)", "count")
+      .where('account.fk_user_id = :userId', { userId })
+      .getRawOne();
+
+    return account;
   }
 }

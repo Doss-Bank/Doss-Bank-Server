@@ -5,9 +5,10 @@ import {
   HttpCode,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import Account from 'src/entities/Account';
 import User from 'src/entities/User';
 import CreateAccountRes from 'src/lib/response/account/CreateAccountRes';
@@ -30,6 +31,32 @@ export class AccountController {
     const account = await this.accountService.createAccount(data, user);
 
     return new CreateAccountRes(200, "계좌 생성 성공", { account })
+  }
+
+  @Get('/admin')
+  @HttpCode(200)
+  @UseGuards(new AuthGuard())
+  @ApiExcludeEndpoint()
+  async getTotalMoney(@Token() user: User) {
+    const money: number = await this.accountService.getTotal(user);
+
+    return {
+      status: 200,
+      money
+    }
+  }
+
+  @Get('/admin2')
+  @HttpCode(200)
+  @UseGuards(new AuthGuard())
+  @ApiExcludeEndpoint()
+  async getUserAccount(@Token() user: User, @Query('userId') userId: string) {
+    const account: Account = await this.accountService.getUserMoney(user, userId);
+
+    return {
+      status: 200,
+      account
+    }
   }
 
   @Get('/')
