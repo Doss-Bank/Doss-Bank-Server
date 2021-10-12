@@ -1,30 +1,30 @@
-import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
-import { async } from 'rxjs';
 import AccountRepository from 'src/account/account.repository';
 import { AccountService } from 'src/account/account.service';
 import Account from 'src/entities/Account';
-import Transfer from 'src/entities/Transfer';
+import Receive from 'src/entities/Receive';
+import Send from 'src/entities/Send';
 import { TransferTo } from 'src/enum/account';
-import { TransferType } from 'src/enum/Transfer';
 import checkBankUtil from 'src/lib/util/checkBankUtil';
 import hashPassword from 'src/lib/util/hashPassword';
 import { Connection, Repository } from 'typeorm';
+import ReceiveDto from './dto/receiveDto';
 import TransferDto from './dto/transferDto';
-import TransferRepository from './transfer.repository';
+import ReceiveRepository from './repos/receive.repository';
+import SendRepository from './repos/send.repository';
 
 @Injectable()
 export class TransferService {
   constructor(
-    @InjectRepository(Transfer)
-    private tfRepo: Repository<Transfer>,
-    private transferRepo: TransferRepository,
     private accountRepo: AccountRepository,
     @InjectRepository(Account)
     private atRepo: Repository<Account>,
     private connection: Connection,
     private accountService: AccountService,
+    private sendRepo: SendRepository,
+    private receiveRepo: ReceiveRepository,
   ) { }
 
   public sendMoney = async (data: TransferDto) => {
@@ -64,16 +64,15 @@ export class TransferService {
       });
     });
 
-    const createTransfer: Transfer = this.tfRepo.create({
+    const createSend: Send = this.sendRepo.create({
       toAccount: data.receiveAccountId,
-      money: data.money,
-      type: TransferType.SEND
+      fromAccount: data.sendAccountId,
+      money: data.money
     });
-    createTransfer.account = account;
-    await this.tfRepo.save(createTransfer);
+    await this.sendRepo.save(createSend);
   }
 
-  public getMoney = async (data: TransferDto) => {
+  public getMoney = async (data: ReceiveDto) => {
     let account: Account = await this.accountService.getAccountByAccount(data.receiveAccountId);
 
     const afterMoney: number = account.money + data.money;
@@ -82,12 +81,11 @@ export class TransferService {
 
     account = await this.atRepo.save(account);
 
-    const createTransfer: Transfer = this.tfRepo.create({
+    const createReceive: Receive = this.receiveRepo.create({
       toAccount: data.receiveAccountId,
-      money: data.money,
-      type: TransferType.RECIEVE
+      fromAccount: data.sendAccountId,
+      money: data.money
     });
-    createTransfer.account = account;
-    await this.tfRepo.save(createTransfer);
+    await this.receiveRepo.save(createReceive);
   }
 }
