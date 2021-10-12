@@ -1,6 +1,7 @@
-import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiForbiddenResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import BaseResponse from 'src/lib/response/BaseResponse';
+import ReceiveDto from './dto/receiveDto';
 import TransferDto from './dto/transferDto';
 import { TransferService } from './transfer.service';
 
@@ -25,7 +26,7 @@ export class TransferController {
 	@Post('/get')
 	@HttpCode(200)
 	@ApiOkResponse({ description: '수신 완료', type: BaseResponse })
-	async getMoney(@Body() transferDto: TransferDto) {
+	async getMoney(@Body() transferDto: ReceiveDto) {
 		await this.transService.getMoney(transferDto);
 
 		return new BaseResponse(200, "수신 완료");
