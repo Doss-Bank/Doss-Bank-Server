@@ -38,6 +38,14 @@ export class UserService {
 			throw new UnauthorizedException('이미 존재하는 아이디입니다');
 		}
 
+		const user2: User = await this.userRepository.findOne({
+			phone: registerDto.phone,
+		});
+
+		if (isDefined(user2)) {
+			throw new UnauthorizedException('이미 존재하는 전화번호입니다');
+		}
+
 		const hash: string = hashPassword(registerDto.pw);
 
 		await this.userRepository.save({
