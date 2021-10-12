@@ -30,6 +30,6 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
   app.use('/public', express.static(join(__dirname, '../public')));
-  await app.listen(PORT);
+  await app.listen(PORT, '0.0.0.0');
 }
 bootstrap();
