@@ -1,5 +1,6 @@
 
 export enum SseConst {
 	SEND = 'send',
-	RECEIVE = 'receive'
+	RECEIVE = 'receive',
+	ERROR = 'error'
 }
