@@ -31,6 +31,7 @@ export class AuthGuard implements CanActivate {
         case 'invalid signature':
         case 'TOKEN_IS_ARRAY':
         case 'NO_USER':
+        case 'jwt malformed':
           throw new UnauthorizedException('유효하지 않은 토큰');
 
         case 'jwt expired':
