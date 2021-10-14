@@ -6,7 +6,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import User from 'src/entities/User';
 import BaseResponse from 'src/lib/response/BaseResponse';
 import IsHavePwRes from 'src/lib/response/password/IsHavePwRes';
@@ -25,7 +25,7 @@ export class PasswordController {
   @Post('/')
   @HttpCode(200)
   @UseGuards(new AuthGuard())
-  @ApiBearerAuth('authorizatoin')
+  @ApiBasicAuth('authorization')
   @ApiOkResponse({ description: "비번 생성 성공", type: BaseResponse })
   @ApiUnauthorizedResponse({ description: '간편인증번호는 1회만 생성이 가능합니다' })
   async makePassword(@Token() user: User, @Body() passwordDto: PasswordDto) {
@@ -38,7 +38,7 @@ export class PasswordController {
   @HttpCode(200)
   @UseGuards(new AuthGuard())
   @ApiOkResponse({ description: '비번 조회 성공', type: IsHavePwRes })
-  @ApiBearerAuth('authorization')
+  @ApiBasicAuth('authorization')
   async isHavePassword(@Token() user: User) {
     const isHave: boolean = await this.passwordService.isHavePW(user);
 

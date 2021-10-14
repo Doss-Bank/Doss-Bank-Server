@@ -3,12 +3,11 @@ import {
   Controller,
   Get,
   HttpCode,
-  HttpStatus,
   Post,
   UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
+  ApiBasicAuth,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -56,7 +55,7 @@ export class UserController {
   @Get('/')
   @HttpCode(200)
   @ApiOperation({ summary: '나의 정보 조회' })
-  @ApiBearerAuth('authorization')
+  @ApiBasicAuth('authorization')
   @UseGuards(new AuthGuard())
   @ApiOkResponse({ description: '유저 정보 조회 성공', type: GetUserRes })
   async getMyInfo(@Token() user: User) {
