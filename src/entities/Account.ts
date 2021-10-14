@@ -4,9 +4,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
+import Receive from './Receive';
+import Send from './Send';
 import User from './User';
 
 @Entity('account')
@@ -45,4 +48,12 @@ export default class Account {
   @ApiProperty()
   @RelationId((account: Account) => account.user)
   userId!: string;
+
+  @ApiProperty()
+  @OneToMany((type) => Send, (send) => send.account)
+  send!: Send[];
+
+  @ApiProperty()
+  @OneToMany((type) => Receive, (receive) => receive.account)
+  receive!: Receive[];
 }

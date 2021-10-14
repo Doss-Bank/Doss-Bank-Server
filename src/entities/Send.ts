@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from "typeorm";
+import Account from "./Account";
 
 @Entity('send')
 export default class Send {
@@ -13,4 +14,14 @@ export default class Send {
 
 	@Column()
 	money!: number;
+
+	@JoinColumn({ name: 'fk_account_idx' })
+	@ManyToOne((type) => Account, {
+		onDelete: 'CASCADE',
+		onUpdate: 'CASCADE',
+	})
+	account!: Account;
+
+	@RelationId((send: Send) => send.account)
+	accountIdx!: number;
 }
