@@ -9,3 +9,9 @@ export default class GetMyAccountInfoRes extends BaseResponse<Account[]>{
 	})
 	data: Account[];
 }
+
+export class GetAccount extends BaseResponse<Account> {
+
+	@ApiProperty()
+	data: Account;
+}

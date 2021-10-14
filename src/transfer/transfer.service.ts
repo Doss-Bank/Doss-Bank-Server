@@ -39,7 +39,7 @@ export class TransferService {
       throw new UnauthorizedException('비밀번호가 틀렸습니다');
     }
 
-    const afterMoney: number = account.money - data.money;
+    const afterMoney: number = account.money - data.money - 600;
 
     if (afterMoney < 0) {
       throw new ForbiddenException('잔액 부족');
@@ -69,6 +69,7 @@ export class TransferService {
       fromAccount: data.sendAccountId,
       money: data.money
     });
+    createSend.account = account;
     await this.sendRepo.save(createSend);
   }
 
@@ -86,6 +87,7 @@ export class TransferService {
       fromAccount: data.sendAccountId,
       money: data.money
     });
+    createReceive.account = account;
     await this.receiveRepo.save(createReceive);
   }
 }
