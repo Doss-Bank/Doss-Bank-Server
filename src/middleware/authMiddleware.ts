@@ -29,7 +29,7 @@ export class AuthGuard implements CanActivate {
     } catch (error) {
       switch (error.message) {
         case 'invalid signature':
-        case 'TOKEN_IS_ARRAY':
+        case 'invalid token':
         case 'NO_USER':
         case 'jwt malformed':
           throw new UnauthorizedException('유효하지 않은 토큰');
