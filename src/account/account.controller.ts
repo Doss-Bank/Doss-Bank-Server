@@ -12,7 +12,7 @@ import { ApiBasicAuth, ApiExcludeEndpoint, ApiOkResponse, ApiTags } from '@nestj
 import Account from 'src/entities/Account';
 import User from 'src/entities/User';
 import CreateAccountRes from 'src/lib/response/account/CreateAccountRes';
-import GetMyAccountInfoRes from 'src/lib/response/account/GetMyAccountInfoRes';
+import GetMyAccountInfoRes, { GetAccount } from 'src/lib/response/account/GetMyAccountInfoRes';
 import { Token } from 'src/lib/token';
 import { AuthGuard } from 'src/middleware/authMiddleware';
 import { AccountService } from './account.service';
@@ -80,10 +80,13 @@ export class AccountController {
     return new GetMyAccountInfoRes(200, "계좌 조회 성공", data);
   }
 
-  @Get('/account')
+  @Get('/acount/:account')
   @HttpCode(200)
-  @ApiOkResponse()
-  async GetAccountByAccount(@Query('account') account: string) {
+  @ApiOkResponse({ description: '계좌 조회 성공', type: GetAccount })
+  async GetAccountByAccount(@Param('account') account: string) {
+    console.log(account);
+    const data: Account = await this.accountService.getAccountByAcc(account);
 
+    return new GetAccount(200, "계좌 조회 성공", data);
   }
 }

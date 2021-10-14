@@ -57,7 +57,7 @@ export class AccountService {
       where: {
         user: userData,
       },
-      relations: ['user'],
+      relations: ['user', 'send', 'receive'],
     });
 
     return accounts;
@@ -121,5 +121,19 @@ export class AccountService {
       .getRawOne();
 
     return account;
+  }
+
+  async getAccountByAcc(account: string): Promise<Account> {
+    const isAccount: Account | undefined = await this.accountRepo.findOne({
+      where: {
+        account: account,
+      }
+    });
+
+    if (!isDefined(isAccount)) {
+      throw new NotFoundException('존재하지 않는 계좌번호');
+    }
+
+    return isAccount;
   }
 }
