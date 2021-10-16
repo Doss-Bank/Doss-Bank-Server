@@ -16,4 +16,9 @@ export default class AccountDto {
   @IsString()
   @ApiProperty()
   name!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  birth!: string;
 }

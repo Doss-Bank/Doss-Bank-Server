@@ -41,6 +41,7 @@ export class AccountService {
       account: acc,
       password: hashPassword(data.accountPW),
       name: data.name,
+      birth: data.birth,
       money: 10000
     });
     account.user = isUser;
