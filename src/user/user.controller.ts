@@ -3,7 +3,9 @@ import {
   Controller,
   Get,
   HttpCode,
+  Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -60,6 +62,16 @@ export class UserController {
   @ApiOkResponse({ description: '유저 정보 조회 성공', type: GetUserRes })
   async getMyInfo(@Token() user: User) {
     const data: User = await this.userService.getMyInfo(user.phone);
+
+    return new GetUserRes(200, "유저 조회 성공", data);
+  }
+
+  @Get('/get')
+  @HttpCode(200)
+  @ApiOkResponse({ description: '유저 조회 성공', type: GetUserRes })
+  @ApiNotFoundResponse({ description: '존재하지 않는 유저' })
+  async getMyInfoByNameAndBirth(@Query('name') name: string, @Query('birth') birth: string) {
+    const data: User = await this.userService.getMyInfoByNameAndBirth(name, birth);
 
     return new GetUserRes(200, "유저 조회 성공", data);
   }
