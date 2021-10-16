@@ -8,7 +8,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBasicAuth, ApiExcludeEndpoint, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiExcludeEndpoint, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import Account from 'src/entities/Account';
 import User from 'src/entities/User';
 import CreateAccountRes from 'src/lib/response/account/CreateAccountRes';
@@ -74,6 +74,7 @@ export class AccountController {
   @Get('/:phone')
   @HttpCode(200)
   @ApiOkResponse({ description: '계좌 조회 성공', type: GetMyAccountInfoRes })
+  @ApiNotFoundResponse({ description: '존재하지 않는 전화번호' })
   async getAccountByPhone(@Param('phone') phone: string) {
     const data: Account[] = await this.accountService.getAccountByPhone(phone);
 
@@ -83,6 +84,7 @@ export class AccountController {
   @Get('/acount/:account')
   @HttpCode(200)
   @ApiOkResponse({ description: '계좌 조회 성공', type: GetAccount })
+  @ApiNotFoundResponse({ description: '존재하지 않는 계좌번호' })
   async GetAccountByAccount(@Param('account') account: string) {
     console.log(account);
     const data: Account = await this.accountService.getAccountByAcc(account);

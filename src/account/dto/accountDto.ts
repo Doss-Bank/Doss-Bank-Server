@@ -10,11 +10,6 @@ export default class AccountDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
-  phone!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
   name!: string;
 
   @IsNotEmpty()
