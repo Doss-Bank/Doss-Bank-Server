@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
+import User from "src/entities/User";
 import BaseResponse from "../BaseResponse";
-import { GetUserData } from "./ResponseData";
 
-export default class GetUserRes extends BaseResponse<GetUserData> {
+export default class GetUserRes extends BaseResponse<User> {
 
 	@ApiProperty()
-	data: GetUserData;
+	data: User;
 }

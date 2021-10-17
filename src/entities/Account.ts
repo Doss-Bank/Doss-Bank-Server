@@ -33,10 +33,6 @@ export default class Account {
   name!: string;
 
   @ApiProperty()
-  @Column()
-  birth!: string;
-
-  @ApiProperty()
   @Column({
     default: 0
   })

@@ -19,6 +19,11 @@ export default class RegisterDto {
 
   @IsNotEmpty()
   @IsString()
+  @ApiProperty({ required: true })
+  name!: string;
+
+  @IsNotEmpty()
+  @IsString()
   @ApiProperty({ description: 'phone', required: true })
   phone!: string;
 

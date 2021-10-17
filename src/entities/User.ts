@@ -12,15 +12,19 @@ export default class User {
   @Column({ select: false })
   pw!: string;
 
-  @ApiProperty({ description: 'nick-name' })
+  @ApiProperty({ description: 'nick' })
   @Column()
   nick!: string;
+
+  @ApiProperty()
+  @Column()
+  name!: string;
 
   @ApiProperty({ description: 'phone-number' })
   @Column()
   phone!: string;
 
-  @ApiProperty({ description: 'birth-day' })
+  @ApiProperty({ description: 'birth' })
   @Column()
   birth!: string;
 

@@ -41,17 +41,17 @@ export class UserService {
 
 		const IdRegex = /^[a-z0-9]{3,12}$/;
 		if (!IdRegex.test(registerDto.id)) {
-			throw new BadRequestException('옳바르지 않은 형식의 아이디 입니다');
+			throw new BadRequestException('올바르지 않은 형식의 아이디 입니다');
 		}
 
 		const PasswordRegex = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
 		if (!PasswordRegex.test(registerDto.pw)) {
-			throw new BadRequestException('옳바르지 않은 형식의 비밀번호 입니다');
+			throw new BadRequestException('올바르지 않은 형식의 비밀번호 입니다');
 		}
 
 		const BirthRegex = /^[0-9]{7}/;
-		if (BirthRegex.test(registerDto.birth)) {
-			throw new BadRequestException('옳바르지 않은 형식의 생일입니다');
+		if (!BirthRegex.test(registerDto.birth)) {
+			throw new BadRequestException('올바르지 않은 형식의 생일입니다');
 		}
 
 		const phone: User = await this.userRepository.findOne({
@@ -66,6 +66,7 @@ export class UserService {
 			id: registerDto.id,
 			pw: hashPassword(registerDto.pw),
 			nick: registerDto.nick,
+			name: registerDto.name,
 			birth: registerDto.birth,
 			phone: registerDto.phone,
 		});

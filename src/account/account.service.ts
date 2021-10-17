@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import Account from 'src/entities/Account';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,6 +20,10 @@ export class AccountService {
   async createAccount(data: AccountDto, user: User): Promise<string> {
     const isUser: User = await this.userService.getMyInfo(user.phone);
 
+    if (data.name !== isUser.name || data.birth !== isUser.birth) {
+      throw new BadRequestException('정보가 올바르지 않습니다');
+    }
+
     let acc: string;
     while (true) {
       acc = generateAccount();
@@ -40,8 +44,6 @@ export class AccountService {
     const account: Account = this.accountRepo.create({
       account: acc,
       password: hashPassword(data.accountPW),
-      name: data.name,
-      birth: data.birth,
       money: 10000
     });
     account.user = isUser;
