@@ -1,8 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
 import Account from "src/entities/Account";
+import { IAccount } from "src/interface/IAccount";
 import BaseResponse from "../BaseResponse";
 
-export default class GetMyAccountInfoRes extends BaseResponse<Account[]>{
+export default class GetMyAccountInfoRes extends BaseResponse<IAccount>{
+
+	@ApiProperty()
+	data: IAccount;
+}
+
+export class GetAccounts extends BaseResponse<Account[]> {
 
 	@ApiProperty({
 		type: () => [Account]
