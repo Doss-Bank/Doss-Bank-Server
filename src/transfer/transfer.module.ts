@@ -14,9 +14,10 @@ import SendRepository from './repos/send.repository';
 import ReceiveRepository from './repos/receive.repository';
 import { SendSubscriber } from './subscriber/send.subscriber';
 import { ReceiveSubscriber } from './subscriber/receive.subsriber';
+import Other from 'src/entities/Other';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Account, User, SimplePassword, SendRepository, ReceiveRepository]), SseModule],
+  imports: [TypeOrmModule.forFeature([Account, User, SimplePassword, SendRepository, ReceiveRepository, Other]), SseModule],
   providers: [TransferService, AccountService, UserService, AccountRepository, PasswordService, SendSubscriber, ReceiveSubscriber],
   controllers: [TransferController],
 })

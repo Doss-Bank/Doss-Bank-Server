@@ -47,7 +47,7 @@ export class TransferService {
 
     account.money = afterMoney;
 
-    const toBank: TransferTo = checkBankUtil(data.receiveAccountId);
+    const toBank: TransferTo = checkBankUtil(data.receiveAccountId, 0);
 
     await this.connection.transaction('SERIALIZABLE', async manager => {
       account = await this.accountRepo.saveAccount(manager, account);
