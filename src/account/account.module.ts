@@ -8,9 +8,10 @@ import User from 'src/entities/User';
 import { PasswordService } from 'src/password/password.service';
 import SimplePassword from 'src/entities/SimplePassword';
 import { SseService } from 'src/sse/sse.service';
+import Other from 'src/entities/Other';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Account, User, SimplePassword])],
+  imports: [TypeOrmModule.forFeature([Account, User, SimplePassword, Other])],
   providers: [AccountService, UserService, PasswordService, SseService],
   controllers: [AccountController],
 })

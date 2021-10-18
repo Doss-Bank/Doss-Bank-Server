@@ -8,6 +8,10 @@ import { UserService } from 'src/user/user.service';
 import { isDefined } from 'class-validator';
 import hashPassword from 'src/lib/util/hashPassword';
 import generateAccount from 'src/lib/uuid';
+import Other from 'src/entities/Other';
+import { IAccount } from 'src/interface/IAccount';
+import axios from 'axios';
+import { GetAccount } from 'src/enum/account';
 
 @Injectable()
 export class AccountService {
@@ -15,6 +19,8 @@ export class AccountService {
     @InjectRepository(Account)
     private accountRepo: Repository<Account>,
     private userService: UserService,
+    @InjectRepository(Other)
+    private otherRepo: Repository<Other>,
   ) { }
 
   async createAccount(data: AccountDto, user: User): Promise<string> {
@@ -44,6 +50,7 @@ export class AccountService {
     const account: Account = this.accountRepo.create({
       account: acc,
       password: hashPassword(data.accountPW),
+      name: data.name,
       money: 10000
     });
     account.user = isUser;
@@ -53,7 +60,7 @@ export class AccountService {
     return account.account;
   }
 
-  async getMyAccounts(user: User): Promise<Account[]> {
+  async getMyAccounts(user: User): Promise<IAccount> {
     const userData: User = await this.userService.getMyInfo(user.phone);
 
     const accounts: Account[] = await this.accountRepo.find({
@@ -63,7 +70,16 @@ export class AccountService {
       relations: ['user', 'send', 'receive'],
     });
 
-    return accounts;
+    const others: Other[] = await this.otherRepo.find({
+      where: {
+        user: userData,
+      }
+    });
+
+    return {
+      accounts,
+      others
+    };
   }
 
   async getAccountByPhone(phone: string): Promise<Account[]> {
@@ -138,5 +154,11 @@ export class AccountService {
     }
 
     return isAccount;
+  }
+
+  async getOtherAccount(user: User): Promise<void> {
+    const res = await axios.get(GetAccount.KaKao + `/${user.phone}`);
+
+    console.log(res.data.data[0].accountId);
   }
 }
