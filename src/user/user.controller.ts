@@ -19,7 +19,7 @@ import {
 import User from 'src/entities/User';
 import { ILogin } from 'src/interface/ILogin';
 import GetUserRes from 'src/lib/response/user/GetUserRes';
-import LoginResponse, { RegisterResponse } from 'src/lib/response/user/LoginResponse';
+import LoginResponse, { CheckResponse, RegisterResponse } from 'src/lib/response/user/LoginResponse';
 import { ResToken } from 'src/lib/response/user/ResponseData';
 import { Token } from 'src/lib/token';
 import { AuthGuard } from 'src/middleware/authMiddleware';
@@ -74,5 +74,23 @@ export class UserController {
     const data: User = await this.userService.getMyInfoByNameAndBirth(name, birth);
 
     return new GetUserRes(200, "유저 조회 성공", data);
+  }
+
+  @Get('/check-id')
+  @HttpCode(200)
+  @ApiOkResponse({ description: '아이디 중복 조회 성공', type: CheckResponse })
+  async checkId(@Query('id') id: string) {
+    const check: boolean = await this.userService.checkId(id);
+
+    return new CheckResponse(200, "중복 조회 성공", check);
+  }
+
+  @Get('/check-nick')
+  @HttpCode(200)
+  @ApiOkResponse({ description: '닉네임 중복 조호 성공', type: CheckResponse })
+  async checkNick(@Query('nick') nick: string) {
+    const check: boolean = await this.userService.checkNick(nick);
+
+    return new CheckResponse(200, "닉네임 중복 조회 성공", check);
   }
 }

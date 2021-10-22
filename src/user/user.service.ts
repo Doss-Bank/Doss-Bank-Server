@@ -137,4 +137,32 @@ export class UserService {
 
 		return data;
 	}
+
+	async checkId(id: string): Promise<boolean> {
+		const checkId: User | undefined = await this.userRepository.findOne({
+			where: {
+				id: id,
+			}
+		});
+
+		if (checkId !== undefined) {
+			return false;
+		}
+
+		return true;
+	}
+
+	async checkNick(nick: string): Promise<boolean> {
+		const checkNick: User | undefined = await this.userRepository.findOne({
+			where: {
+				nick: nick
+			}
+		});
+
+		if (checkNick !== undefined) {
+			return false;
+		}
+
+		return true;
+	}
 }
