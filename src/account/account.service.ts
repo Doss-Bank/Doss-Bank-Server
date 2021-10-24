@@ -72,7 +72,7 @@ export class AccountService {
 
     const others: Other[] = await this.otherRepo.find({
       where: {
-        user: userData,
+        user: userData
       }
     });
 
