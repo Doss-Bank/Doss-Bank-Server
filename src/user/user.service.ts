@@ -126,7 +126,7 @@ export class UserService {
 	async getMyInfoByNameAndBirth(name: string, birth: string): Promise<User> {
 		const data: User | undefined = await this.userRepository.findOne({
 			where: {
-				nick: name,
+				name: name,
 				birth: birth
 			},
 			relations: ['account']
