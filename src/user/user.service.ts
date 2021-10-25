@@ -128,7 +128,8 @@ export class UserService {
 			where: {
 				nick: name,
 				birth: birth
-			}
+			},
+			relations: ['account']
 		});
 
 		if (data === undefined) {
