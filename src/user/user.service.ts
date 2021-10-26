@@ -99,7 +99,8 @@ export class UserService {
 		const data: User | undefined = await this.userRepository.findOne({
 			where: {
 				phone: phone
-			}
+			},
+			relations: ['account']
 		});
 
 		if (data === undefined) {
