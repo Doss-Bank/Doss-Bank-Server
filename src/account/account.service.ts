@@ -12,6 +12,8 @@ import Other from 'src/entities/Other';
 import { IAccount } from 'src/interface/IAccount';
 import axios from 'axios';
 import { GetAccount } from 'src/enum/account';
+import OtherDto from './dto/otherDto';
+import checkBankUtil from 'src/lib/util/checkBankUtil';
 
 @Injectable()
 export class AccountService {
@@ -26,7 +28,7 @@ export class AccountService {
   async createAccount(data: AccountDto, user: User): Promise<string> {
     const isUser: User = await this.userService.getMyInfo(user.phone);
 
-    if (data.name !== isUser.name || data.birth !== isUser.birth) {
+    if (data.birth !== isUser.birth) {
       throw new BadRequestException('정보가 올바르지 않습니다');
     }
 
@@ -156,9 +158,28 @@ export class AccountService {
     return isAccount;
   }
 
-  async getOtherAccount(user: User): Promise<void> {
+  async getOtherAccount(user: User): Promise<any> {
     const res = await axios.get(GetAccount.KaKao + `/${user.phone}`);
 
-    console.log(res.data.data[0].accountId);
+    return res.data.data;
+  }
+
+  async addOtherAccount(otherDto: OtherDto, user: User): Promise<void> {
+    const { account } = otherDto;
+    const userData: User = await this.userService.getMyInfo(user.phone);
+
+    for (let i = 0; i < account.length; i++) {
+      const checkBank = checkBankUtil(account[i], 1);
+
+      const res = await axios.get(`${checkBank}/${account[i]}`);
+
+      const createOther: Other = this.otherRepo.create({
+        user: userData,
+        account: res.data.data.accountId,
+        money: res.data.data.money,
+        bank: checkBankUtil(account[i], 2),
+      });
+      await this.otherRepo.save(createOther);
+    }
   }
 }

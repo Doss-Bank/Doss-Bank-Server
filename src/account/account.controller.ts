@@ -19,6 +19,7 @@ import { Token } from 'src/lib/token';
 import { AuthGuard } from 'src/middleware/authMiddleware';
 import { AccountService } from './account.service';
 import AccountDto from './dto/accountDto';
+import OtherDto from './dto/otherDto';
 
 @Controller('account')
 @ApiTags('Account')
@@ -62,11 +63,25 @@ export class AccountController {
     }
   }
 
-  @Get('/add')
+  @Get('/other')
   @HttpCode(200)
   @UseGuards(new AuthGuard())
-  async addAccount(@Token() user: User) {
-    // await this.accountService.addAccount(user);
+  @ApiOkResponse()
+  async getOtherAccount(@Token() user: User) {
+    const accounts = await this.accountService.getOtherAccount(user);
+
+    return {
+      status: 200,
+      message: '조회 성공',
+      accounts
+    }
+  }
+
+  @Post('/add')
+  @HttpCode(200)
+  @UseGuards(new AuthGuard())
+  async addAccount(@Token() user: User, @Body() otherDto: OtherDto) {
+    await this.accountService.addOtherAccount(otherDto, user);
 
     return new BaseResponse(200, "추가 성공");
   }

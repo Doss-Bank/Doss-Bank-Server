@@ -1,5 +1,5 @@
 import { BadRequestException } from "@nestjs/common";
-import { TransferTo } from "src/enum/account";
+import { BringAccountInfo, TransferTo } from "src/enum/account";
 import { Bank } from "src/enum/Bank";
 
 export default (account: string, type: number): any => {
@@ -22,7 +22,12 @@ export default (account: string, type: number): any => {
 	} else if (type === 1) {
 		switch (bankCode) {
 			case '001':
-				return Bank.Kakao;
+				return BringAccountInfo.KaKao;
+		}
+	} else if (type === 2) {
+		switch (bankCode) {
+			case '001':
+				return "카카오뱅크";
 		}
 	}
 

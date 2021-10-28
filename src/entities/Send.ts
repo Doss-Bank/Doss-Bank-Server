@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from "typeorm";
 import Account from "./Account";
 
 @Entity('send')
@@ -24,4 +24,7 @@ export default class Send {
 
 	@RelationId((send: Send) => send.account)
 	accountIdx!: number;
+
+	@CreateDateColumn({ name: 'created_at' })
+	createdAt!: Date;
 }
