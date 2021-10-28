@@ -10,6 +10,7 @@ import { ProductModule } from './product/product.module';
 import { SseModule } from './sse/sse.module';
 import CatchException from './lib/errLib';
 import { ErrorModule } from './error/error.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ErrorModule } from './error/error.module';
     TransferModule,
     ProductModule,
     ErrorModule,
+    UploadModule,
   ],
   controllers: [],
   providers: [

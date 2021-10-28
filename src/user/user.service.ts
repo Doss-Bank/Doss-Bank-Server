@@ -69,6 +69,7 @@ export class UserService {
 			name: registerDto.name,
 			birth: registerDto.birth,
 			phone: registerDto.phone,
+			profileImage: registerDto.profileImage
 		});
 
 		const token: string = generateRegisterToken(registerDto.id);

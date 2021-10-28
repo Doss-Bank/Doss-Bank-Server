@@ -28,6 +28,12 @@ export default class User {
   @Column()
   birth!: string;
 
+  @ApiProperty({ description: 'profile_image' })
+  @Column({
+    name: 'profile_image'
+  })
+  profileImage: string;
+
   @ApiProperty({ description: 'account', type: [Account] })
   @OneToMany((type) => Account, (account) => account.user)
   account!: Account[];
