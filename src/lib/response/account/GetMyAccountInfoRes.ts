@@ -22,3 +22,8 @@ export class GetAccount extends BaseResponse<Account> {
 	@ApiProperty()
 	data: Account;
 }
+
+export class GetOtherAccount extends BaseResponse<string[]> {
+	@ApiProperty()
+	data: string[];
+}

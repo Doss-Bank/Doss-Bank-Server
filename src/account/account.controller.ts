@@ -13,7 +13,7 @@ import Account from 'src/entities/Account';
 import User from 'src/entities/User';
 import { IAccount } from 'src/interface/IAccount';
 import CreateAccountRes from 'src/lib/response/account/CreateAccountRes';
-import GetMyAccountInfoRes, { GetAccount, GetAccounts } from 'src/lib/response/account/GetMyAccountInfoRes';
+import GetMyAccountInfoRes, { GetAccount, GetAccounts, GetOtherAccount } from 'src/lib/response/account/GetMyAccountInfoRes';
 import BaseResponse from 'src/lib/response/BaseResponse';
 import { Token } from 'src/lib/token';
 import { AuthGuard } from 'src/middleware/authMiddleware';
@@ -66,7 +66,7 @@ export class AccountController {
   @Get('/other')
   @HttpCode(200)
   @UseGuards(new AuthGuard())
-  @ApiOkResponse()
+  @ApiOkResponse({ type: GetOtherAccount })
   async getOtherAccount(@Token() user: User) {
     const accounts = await this.accountService.getOtherAccount(user);
 
@@ -80,6 +80,7 @@ export class AccountController {
   @Post('/add')
   @HttpCode(200)
   @UseGuards(new AuthGuard())
+  @ApiOkResponse({ type: BaseResponse })
   async addAccount(@Token() user: User, @Body() otherDto: OtherDto) {
     await this.accountService.addOtherAccount(otherDto, user);
 
