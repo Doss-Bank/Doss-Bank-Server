@@ -73,7 +73,7 @@ export class AccountController {
     return {
       status: 200,
       message: '조회 성공',
-      accounts
+      data: accounts
     }
   }
 
