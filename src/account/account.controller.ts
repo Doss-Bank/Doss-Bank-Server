@@ -67,8 +67,8 @@ export class AccountController {
   @HttpCode(200)
   @UseGuards(new AuthGuard())
   @ApiOkResponse({ type: GetOtherAccount })
-  async getOtherAccount(@Token() user: User) {
-    const accounts = await this.accountService.getOtherAccount(user);
+  async getOtherAccount(@Query('birth') birth: string, @Query('name') name: string) {
+    const accounts = await this.accountService.getOtherAccount(birth, name);
 
     return {
       status: 200,

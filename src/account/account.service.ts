@@ -158,7 +158,9 @@ export class AccountService {
     return isAccount;
   }
 
-  async getOtherAccount(user: User): Promise<any> {
+  async getOtherAccount(birth: string, name: string): Promise<any> {
+    const user: User = await this.userService.getMyInfoByNameAndBirth(name, birth);
+
     const res = await axios.get(GetAccount.KaKao + `/${user.phone}`);
 
     return res.data.data;
