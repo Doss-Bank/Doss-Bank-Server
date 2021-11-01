@@ -23,7 +23,7 @@ export default class SimplePassword {
   phone!: string;
 
   @JoinColumn({ name: 'fk_user_id' })
-  @ManyToOne((type) => User, {
+  @ManyToOne(() => User, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })

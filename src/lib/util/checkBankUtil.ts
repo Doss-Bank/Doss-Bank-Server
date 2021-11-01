@@ -1,6 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
 import { BringAccountInfo, TransferTo } from 'src/enum/account';
-import { Bank } from 'src/enum/Bank';
 
 export default (account: string, type: number): any => {
   const bankCode: string = account.slice(0, 3);

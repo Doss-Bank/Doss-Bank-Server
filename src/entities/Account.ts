@@ -39,7 +39,7 @@ export default class Account {
   money!: number;
 
   @JoinColumn({ name: 'fk_user_id' })
-  @ManyToOne((type) => User, {
+  @ManyToOne(() => User, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
@@ -50,10 +50,10 @@ export default class Account {
   userId!: string;
 
   @ApiProperty()
-  @OneToMany((type) => Send, (send) => send.account)
+  @OneToMany(() => Send, (send) => send.account)
   send!: Send[];
 
   @ApiProperty()
-  @OneToMany((type) => Receive, (receive) => receive.account)
+  @OneToMany(() => Receive, (receive) => receive.account)
   receive!: Receive[];
 }

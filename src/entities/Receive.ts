@@ -23,7 +23,7 @@ export default class Receive {
   money!: number;
 
   @JoinColumn({ name: 'fk_account_idx' })
-  @ManyToOne((type) => Account, {
+  @ManyToOne(() => Account, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })

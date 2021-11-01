@@ -35,6 +35,6 @@ export default class User {
   profileImage: string;
 
   @ApiProperty({ description: 'account', type: [Account] })
-  @OneToMany((type) => Account, (account) => account.user)
+  @OneToMany(() => Account, (account) => account.user)
   account!: Account[];
 }
