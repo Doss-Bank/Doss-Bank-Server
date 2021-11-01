@@ -28,7 +28,7 @@ export class AccountService {
     private userService: UserService,
     @InjectRepository(Other)
     private otherRepo: Repository<Other>,
-  ) {}
+  ) { }
 
   async createAccount(data: AccountDto, user: User): Promise<string> {
     const isUser: User = await this.userService.getMyInfo(user.phone);
@@ -158,6 +158,7 @@ export class AccountService {
       where: {
         account: account,
       },
+      relations: ['user'],
     });
 
     if (!isDefined(isAccount)) {

@@ -34,7 +34,7 @@ import OtherDto from './dto/otherDto';
 @Controller('account')
 @ApiTags('Account')
 export class AccountController {
-  constructor(private accountService: AccountService) {}
+  constructor(private accountService: AccountService) { }
 
   @Post('/')
   @HttpCode(200)
@@ -103,6 +103,16 @@ export class AccountController {
     return new BaseResponse(200, '추가 성공');
   }
 
+  @Get('/:account')
+  @HttpCode(200)
+  @ApiOkResponse({ description: '계좌 조회 성공', type: GetAccount })
+  @ApiNotFoundResponse({ description: '존재하지 않는 계좌번호' })
+  async GetAccountByAccount(@Param('account') account: string) {
+    const data: Account = await this.accountService.getAccountByAcc(account);
+
+    return new GetAccount(200, '계좌 조회 성공', data);
+  }
+
   @Get('/')
   @HttpCode(200)
   @UseGuards(new AuthGuard())
@@ -125,16 +135,5 @@ export class AccountController {
     const data: Account[] = await this.accountService.getAccountByPhone(phone);
 
     return new GetAccounts(200, '계좌 조회 성공', data);
-  }
-
-  @Get('/acount/:account')
-  @HttpCode(200)
-  @ApiOkResponse({ description: '계좌 조회 성공', type: GetAccount })
-  @ApiNotFoundResponse({ description: '존재하지 않는 계좌번호' })
-  async GetAccountByAccount(@Param('account') account: string) {
-    console.log(account);
-    const data: Account = await this.accountService.getAccountByAcc(account);
-
-    return new GetAccount(200, '계좌 조회 성공', data);
   }
 }
