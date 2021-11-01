@@ -15,4 +15,4 @@ import Other from 'src/entities/Other';
   providers: [AccountService, UserService, PasswordService, SseService],
   controllers: [AccountController],
 })
-export class AccountModule { }
+export class AccountModule {}

@@ -12,9 +12,7 @@ import { ErrorEvent } from 'src/error/ErrorEvent';
 
 @Catch()
 export default class CatchException implements ExceptionFilter {
-  constructor(
-    private eventEmitter: EventEmitter2,
-  ) { }
+  constructor(private eventEmitter: EventEmitter2) {}
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx: HttpArgumentsHost = host.switchToHttp();
     const request: Request = ctx.getRequest();
@@ -29,10 +27,7 @@ export default class CatchException implements ExceptionFilter {
       errorEvent.status = exception.getStatus();
       errorEvent.message = exception.message;
 
-      this.eventEmitter.emit(
-        SseConst.ERROR,
-        errorEvent,
-      );
+      this.eventEmitter.emit(SseConst.ERROR, errorEvent);
 
       httpError = {
         status: exception.getStatus(),

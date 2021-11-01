@@ -1,6 +1,5 @@
-
 export class ErrorEvent {
-	ip: string;
-	status: number;
-	message: string;
+  ip: string;
+  status: number;
+  message: string;
 }

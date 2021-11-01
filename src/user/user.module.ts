@@ -12,4 +12,4 @@ import { PasswordModule } from 'src/password/password.module';
   providers: [UserService, PasswordService],
   controllers: [UserController],
 })
-export class UserModule { }
+export class UserModule {}

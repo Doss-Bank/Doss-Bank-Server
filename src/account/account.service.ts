@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import Account from 'src/entities/Account';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,7 +28,7 @@ export class AccountService {
     private userService: UserService,
     @InjectRepository(Other)
     private otherRepo: Repository<Other>,
-  ) { }
+  ) {}
 
   async createAccount(data: AccountDto, user: User): Promise<string> {
     const isUser: User = await this.userService.getMyInfo(user.phone);
@@ -53,7 +58,7 @@ export class AccountService {
       account: acc,
       password: hashPassword(data.accountPW),
       name: data.name,
-      money: 10000
+      money: 10000,
     });
     account.user = isUser;
 
@@ -74,13 +79,13 @@ export class AccountService {
 
     const others: Other[] = await this.otherRepo.find({
       where: {
-        user: userData
-      }
+        user: userData,
+      },
     });
 
     return {
       accounts,
-      others
+      others,
     };
   }
 
@@ -89,7 +94,7 @@ export class AccountService {
 
     const accounts: Account[] = await this.accountRepo.find({
       where: {
-        user: user
+        user: user,
       },
       relations: ['user'],
     });
@@ -99,10 +104,10 @@ export class AccountService {
 
   async getAccountByAccount(accountNum: string): Promise<Account> {
     const data: Account = await this.accountRepo.findOne({
-      select: ["idx", "account", "money", "password"],
+      select: ['idx', 'account', 'money', 'password'],
       where: {
         account: accountNum,
-      }
+      },
     });
 
     if (data === undefined || data === null) {
@@ -115,29 +120,33 @@ export class AccountService {
   async getTotal(user: User): Promise<number> {
     const isAdmin: User = await this.userService.getMyInfo(user.phone);
 
-    if (isAdmin.id !== "admin") {
-      throw new UnauthorizedException("권한이 없습니다");
+    if (isAdmin.id !== 'admin') {
+      throw new UnauthorizedException('권한이 없습니다');
     }
 
-    return this.accountRepo.createQueryBuilder()
-      .select('SUM(money)', "money")
+    return this.accountRepo
+      .createQueryBuilder()
+      .select('SUM(money)', 'money')
       .getRawOne();
   }
 
   async getUserMoney(user: User, userId: string): Promise<Account> {
-    const isUser: User | undefined = await this.userService.getMyInfo(user.phone);
+    const isUser: User | undefined = await this.userService.getMyInfo(
+      user.phone,
+    );
 
     if (isUser === undefined) {
       throw new NotFoundException('존재하지 않는 유저');
     }
 
-    if (isUser.id !== "admin") {
+    if (isUser.id !== 'admin') {
       throw new UnauthorizedException('권한이 없습니다');
     }
 
-    const account: Account = await this.accountRepo.createQueryBuilder('account')
-      .select("SUM(account.money)", "money")
-      .addSelect("COUNT(*)", "count")
+    const account: Account = await this.accountRepo
+      .createQueryBuilder('account')
+      .select('SUM(account.money)', 'money')
+      .addSelect('COUNT(*)', 'count')
       .where('account.fk_user_id = :userId', { userId })
       .getRawOne();
 
@@ -148,7 +157,7 @@ export class AccountService {
     const isAccount: Account | undefined = await this.accountRepo.findOne({
       where: {
         account: account,
-      }
+      },
     });
 
     if (!isDefined(isAccount)) {
@@ -159,7 +168,10 @@ export class AccountService {
   }
 
   async getOtherAccount(birth: string, name: string): Promise<any> {
-    const user: User = await this.userService.getMyInfoByNameAndBirth(name, birth);
+    const user: User = await this.userService.getMyInfoByNameAndBirth(
+      name,
+      birth,
+    );
 
     const res = await axios.get(GetAccount.KaKao + `/${user.phone}`);
 

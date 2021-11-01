@@ -5,8 +5,8 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProductService {
-	constructor(
-		@InjectRepository(Product)
-		private productRepo: Repository<Product>,
-	) { }
+  constructor(
+    @InjectRepository(Product)
+    private productRepo: Repository<Product>,
+  ) {}
 }

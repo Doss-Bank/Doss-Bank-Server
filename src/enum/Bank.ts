@@ -1,5 +1,4 @@
-
 export enum Bank {
-	Toss = 0,
-	Kakao = 1,
+  Toss = 0,
+  Kakao = 1,
 }

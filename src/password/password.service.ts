@@ -1,4 +1,10 @@
-import { forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import SimplePassword from 'src/entities/SimplePassword';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,7 +23,7 @@ export class PasswordService {
     private readonly userService: UserService,
     @InjectRepository(SimplePassword)
     private pwRepository: Repository<SimplePassword>,
-  ) { }
+  ) {}
 
   async makePassword(user: User, passwordDto: PasswordDto) {
     const userData: User = await this.userService.getById(user.id);
@@ -82,8 +88,8 @@ export class PasswordService {
   async getId(phone: string): Promise<string> {
     const data: SimplePassword | undefined = await this.pwRepository.findOne({
       where: {
-        phone: phone
-      }
+        phone: phone,
+      },
     });
 
     if (data === undefined) {

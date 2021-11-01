@@ -1,30 +1,38 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from "typeorm";
-import Account from "./Account";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  RelationId,
+} from 'typeorm';
+import Account from './Account';
 
 @Entity('send')
 export default class Send {
-	@PrimaryGeneratedColumn()
-	idx!: number;
+  @PrimaryGeneratedColumn()
+  idx!: number;
 
-	@Column()
-	toAccount!: string;
+  @Column()
+  toAccount!: string;
 
-	@Column()
-	fromAccount!: string;
+  @Column()
+  fromAccount!: string;
 
-	@Column()
-	money!: number;
+  @Column()
+  money!: number;
 
-	@JoinColumn({ name: 'fk_account_idx' })
-	@ManyToOne((type) => Account, {
-		onDelete: 'CASCADE',
-		onUpdate: 'CASCADE',
-	})
-	account!: Account;
+  @JoinColumn({ name: 'fk_account_idx' })
+  @ManyToOne((type) => Account, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  account!: Account;
 
-	@RelationId((send: Send) => send.account)
-	accountIdx!: number;
+  @RelationId((send: Send) => send.account)
+  accountIdx!: number;
 
-	@CreateDateColumn({ name: 'created_at' })
-	createdAt!: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt!: Date;
 }

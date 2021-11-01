@@ -1,10 +1,10 @@
 import {
-	BadRequestException,
-	forwardRef,
-	Inject,
-	Injectable,
-	NotFoundException,
-	UnauthorizedException,
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from 'src/entities/User';
@@ -21,151 +21,152 @@ import { ResToken } from 'src/lib/response/user/ResponseData';
 
 @Injectable()
 export class UserService {
-	constructor(
-		@InjectRepository(User)
-		private userRepository: Repository<User>,
-		@Inject(forwardRef(() => PasswordService))
-		private pwService: PasswordService,
-	) { }
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    @Inject(forwardRef(() => PasswordService))
+    private pwService: PasswordService,
+  ) {}
 
-	async register(registerDto: RegisterDto): Promise<ResToken> {
-		const id: User | undefined = await this.userRepository.findOne({
-			where: {
-				id: registerDto.id,
-			},
-		});
+  async register(registerDto: RegisterDto): Promise<ResToken> {
+    const id: User | undefined = await this.userRepository.findOne({
+      where: {
+        id: registerDto.id,
+      },
+    });
 
-		if (isDefined(id)) {
-			throw new UnauthorizedException('이미 존재하는 아이디입니다');
-		}
+    if (isDefined(id)) {
+      throw new UnauthorizedException('이미 존재하는 아이디입니다');
+    }
 
-		const IdRegex = /^[a-z0-9]{3,12}$/;
-		if (!IdRegex.test(registerDto.id)) {
-			throw new BadRequestException('올바르지 않은 형식의 아이디 입니다');
-		}
+    const IdRegex = /^[a-z0-9]{3,12}$/;
+    if (!IdRegex.test(registerDto.id)) {
+      throw new BadRequestException('올바르지 않은 형식의 아이디 입니다');
+    }
 
-		const PasswordRegex = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
-		if (!PasswordRegex.test(registerDto.pw)) {
-			throw new BadRequestException('올바르지 않은 형식의 비밀번호 입니다');
-		}
+    const PasswordRegex =
+      /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
+    if (!PasswordRegex.test(registerDto.pw)) {
+      throw new BadRequestException('올바르지 않은 형식의 비밀번호 입니다');
+    }
 
-		const BirthRegex = /^[0-9]{7}/;
-		if (!BirthRegex.test(registerDto.birth)) {
-			throw new BadRequestException('올바르지 않은 형식의 생일입니다');
-		}
+    const BirthRegex = /^[0-9]{7}/;
+    if (!BirthRegex.test(registerDto.birth)) {
+      throw new BadRequestException('올바르지 않은 형식의 생일입니다');
+    }
 
-		const phone: User = await this.userRepository.findOne({
-			phone: registerDto.phone,
-		});
+    const phone: User = await this.userRepository.findOne({
+      phone: registerDto.phone,
+    });
 
-		if (isDefined(phone)) {
-			throw new UnauthorizedException('이미 존재하는 전화번호입니다');
-		}
+    if (isDefined(phone)) {
+      throw new UnauthorizedException('이미 존재하는 전화번호입니다');
+    }
 
-		await this.userRepository.save({
-			id: registerDto.id,
-			pw: hashPassword(registerDto.pw),
-			nick: registerDto.nick,
-			name: registerDto.name,
-			birth: registerDto.birth,
-			phone: registerDto.phone,
-			profileImage: registerDto.profileImage
-		});
+    await this.userRepository.save({
+      id: registerDto.id,
+      pw: hashPassword(registerDto.pw),
+      nick: registerDto.nick,
+      name: registerDto.name,
+      birth: registerDto.birth,
+      phone: registerDto.phone,
+      profileImage: registerDto.profileImage,
+    });
 
-		const token: string = generateRegisterToken(registerDto.id);
+    const token: string = generateRegisterToken(registerDto.id);
 
-		return {
-			token,
-		};
-	}
+    return {
+      token,
+    };
+  }
 
-	async login(loginDto: LoginDto): Promise<ILogin> {
-		const user: User | undefined = await this.userRepository.findOne({
-			id: loginDto.id,
-			pw: hashPassword(loginDto.pw),
-		});
+  async login(loginDto: LoginDto): Promise<ILogin> {
+    const user: User | undefined = await this.userRepository.findOne({
+      id: loginDto.id,
+      pw: hashPassword(loginDto.pw),
+    });
 
-		validateData(user);
+    validateData(user);
 
-		const token: string = generateAccessToken(user.phone);
-		const simpleId: string | undefined = await this.pwService.getId(user.phone);
+    const token: string = generateAccessToken(user.phone);
+    const simpleId: string | undefined = await this.pwService.getId(user.phone);
 
-		return {
-			simpleId,
-			token,
-		}
-	}
+    return {
+      simpleId,
+      token,
+    };
+  }
 
-	async getMyInfo(phone: string): Promise<User> {
-		const data: User | undefined = await this.userRepository.findOne({
-			where: {
-				phone: phone
-			},
-			relations: ['account']
-		});
+  async getMyInfo(phone: string): Promise<User> {
+    const data: User | undefined = await this.userRepository.findOne({
+      where: {
+        phone: phone,
+      },
+      relations: ['account'],
+    });
 
-		if (data === undefined) {
-			throw new NotFoundException('존재하지 않는 전화번호');
-		}
+    if (data === undefined) {
+      throw new NotFoundException('존재하지 않는 전화번호');
+    }
 
-		return data;
-	}
+    return data;
+  }
 
-	async getById(id: string): Promise<User> {
-		const data: User | undefined = await this.userRepository.findOne({
-			where: {
-				id: id
-			}
-		});
+  async getById(id: string): Promise<User> {
+    const data: User | undefined = await this.userRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
 
-		if (data === undefined) {
-			throw new NotFoundException("존재하지 않는 유저");
-		}
+    if (data === undefined) {
+      throw new NotFoundException('존재하지 않는 유저');
+    }
 
-		return data;
-	}
+    return data;
+  }
 
-	async getMyInfoByNameAndBirth(name: string, birth: string): Promise<User> {
-		const data: User | undefined = await this.userRepository.findOne({
-			where: {
-				name: name,
-				birth: birth
-			},
-			relations: ['account']
-		});
+  async getMyInfoByNameAndBirth(name: string, birth: string): Promise<User> {
+    const data: User | undefined = await this.userRepository.findOne({
+      where: {
+        name: name,
+        birth: birth,
+      },
+      relations: ['account'],
+    });
 
-		if (data === undefined) {
-			throw new NotFoundException('존재하지 않는 유저');
-		}
+    if (data === undefined) {
+      throw new NotFoundException('존재하지 않는 유저');
+    }
 
-		return data;
-	}
+    return data;
+  }
 
-	async checkId(id: string): Promise<boolean> {
-		const checkId: User | undefined = await this.userRepository.findOne({
-			where: {
-				id: id,
-			}
-		});
+  async checkId(id: string): Promise<boolean> {
+    const checkId: User | undefined = await this.userRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
 
-		if (checkId !== undefined) {
-			return false;
-		}
+    if (checkId !== undefined) {
+      return false;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	async checkNick(nick: string): Promise<boolean> {
-		const checkNick: User | undefined = await this.userRepository.findOne({
-			where: {
-				nick: nick
-			}
-		});
+  async checkNick(nick: string): Promise<boolean> {
+    const checkNick: User | undefined = await this.userRepository.findOne({
+      where: {
+        nick: nick,
+      },
+    });
 
-		if (checkNick !== undefined) {
-			return false;
-		}
+    if (checkNick !== undefined) {
+      return false;
+    }
 
-		return true;
-	}
+    return true;
+  }
 }

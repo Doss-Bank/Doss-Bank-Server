@@ -1,4 +1,8 @@
-import { ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import AccountRepository from 'src/account/account.repository';
@@ -25,21 +29,28 @@ export class TransferService {
     private accountService: AccountService,
     private sendRepo: SendRepository,
     private receiveRepo: ReceiveRepository,
-  ) { }
+  ) {}
 
   public sendMoney = async (data: TransferDto) => {
     if (data.receiveAccountId === data.sendAccountId) {
       throw new ForbiddenException('본인 계좌에는 송금할 수 없습니다.');
     }
 
-    let account: Account = await this.accountService.getAccountByAccount(data.sendAccountId);
+    let account: Account = await this.accountService.getAccountByAccount(
+      data.sendAccountId,
+    );
     const hashPW: string = hashPassword(data.sendAccountPw);
 
     if (account.password !== hashPW) {
       throw new UnauthorizedException('비밀번호가 틀렸습니다');
     }
 
-    const afterMoney: number = account.money - data.money - 500;
+    let afterMoney: number;
+    if (data.type === 1) {
+      afterMoney = account.money - data.money; // 가져오기
+    } else {
+      afterMoney = account.money - data.money - 500;
+    }
 
     if (afterMoney < 0) {
       throw new ForbiddenException('잔액 부족');
@@ -49,32 +60,38 @@ export class TransferService {
 
     const toBank: TransferTo = checkBankUtil(data.receiveAccountId, 0);
 
-    await this.connection.transaction('SERIALIZABLE', async manager => {
+    await this.connection.transaction('SERIALIZABLE', async (manager) => {
       account = await this.accountRepo.saveAccount(manager, account);
 
-      await axios.post(toBank, {
-        sendAccountId: data.sendAccountId,
-        sendAccountPw: data.sendAccountPw,
-        receiveAccountId: data.receiveAccountId,
-        money: data.money,
-      }, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
+      await axios.post(
+        toBank,
+        {
+          sendAccountId: data.sendAccountId,
+          sendAccountPw: data.sendAccountPw,
+          receiveAccountId: data.receiveAccountId,
+          money: data.money,
         },
-      });
+        {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+        },
+      );
     });
 
     const createSend: Send = this.sendRepo.create({
       toAccount: data.receiveAccountId,
       fromAccount: data.sendAccountId,
-      money: data.money
+      money: data.money,
     });
     createSend.account = account;
     await this.sendRepo.save(createSend);
-  }
+  };
 
   public getMoney = async (data: ReceiveDto) => {
-    let account: Account = await this.accountService.getAccountByAccount(data.receiveAccountId);
+    let account: Account = await this.accountService.getAccountByAccount(
+      data.receiveAccountId,
+    );
 
     const afterMoney: number = account.money + data.money;
 
@@ -85,9 +102,9 @@ export class TransferService {
     const createReceive: Receive = this.receiveRepo.create({
       toAccount: data.receiveAccountId,
       fromAccount: data.sendAccountId,
-      money: data.money
+      money: data.money,
     });
     createReceive.account = account;
     await this.receiveRepo.save(createReceive);
-  }
+  };
 }

@@ -1,5 +1,4 @@
-
 export enum TransferType {
-	SEND = 0,
-	RECIEVE = 1
+  SEND = 0,
+  RECIEVE = 1,
 }

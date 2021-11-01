@@ -24,7 +24,7 @@ export default class Account {
 
   @ApiProperty()
   @Column({
-    select: false
+    select: false,
   })
   password!: string;
 
@@ -34,7 +34,7 @@ export default class Account {
 
   @ApiProperty()
   @Column({
-    default: 0
+    default: 0,
   })
   money!: number;
 

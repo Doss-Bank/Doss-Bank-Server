@@ -1,5 +1,4 @@
-
 export interface ILogin {
-	simpleId: string;
-	token: string;
+  simpleId: string;
+  token: string;
 }

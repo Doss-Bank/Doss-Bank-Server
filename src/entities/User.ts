@@ -30,7 +30,7 @@ export default class User {
 
   @ApiProperty({ description: 'profile_image' })
   @Column({
-    name: 'profile_image'
+    name: 'profile_image',
   })
   profileImage: string;
 

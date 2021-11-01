@@ -3,13 +3,13 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class SseService {
-	private events: Subject<MessageEvent> = new Subject<MessageEvent>();
+  private events: Subject<MessageEvent> = new Subject<MessageEvent>();
 
-	addEvent(event: MessageEvent) {
-		this.events.next(event);
-	}
+  addEvent(event: MessageEvent) {
+    this.events.next(event);
+  }
 
-	sendEvents() {
-		return this.events.asObservable();
-	}
+  sendEvents() {
+    return this.events.asObservable();
+  }
 }

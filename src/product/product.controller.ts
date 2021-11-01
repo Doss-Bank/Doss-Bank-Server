@@ -5,5 +5,5 @@ import { ProductService } from './product.service';
 @Controller('product')
 @ApiTags('Product')
 export class ProductController {
-	constructor(private productService: ProductService,) { }
+  constructor(private productService: ProductService) {}
 }

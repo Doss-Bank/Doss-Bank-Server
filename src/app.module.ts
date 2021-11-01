@@ -32,4 +32,4 @@ import { UploadModule } from './upload/upload.module';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

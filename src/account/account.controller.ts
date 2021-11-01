@@ -8,12 +8,22 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBasicAuth, ApiExcludeEndpoint, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBasicAuth,
+  ApiExcludeEndpoint,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import Account from 'src/entities/Account';
 import User from 'src/entities/User';
 import { IAccount } from 'src/interface/IAccount';
 import CreateAccountRes from 'src/lib/response/account/CreateAccountRes';
-import GetMyAccountInfoRes, { GetAccount, GetAccounts, GetOtherAccount } from 'src/lib/response/account/GetMyAccountInfoRes';
+import GetMyAccountInfoRes, {
+  GetAccount,
+  GetAccounts,
+  GetOtherAccount,
+} from 'src/lib/response/account/GetMyAccountInfoRes';
 import BaseResponse from 'src/lib/response/BaseResponse';
 import { Token } from 'src/lib/token';
 import { AuthGuard } from 'src/middleware/authMiddleware';
@@ -24,7 +34,7 @@ import OtherDto from './dto/otherDto';
 @Controller('account')
 @ApiTags('Account')
 export class AccountController {
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService) {}
 
   @Post('/')
   @HttpCode(200)
@@ -34,7 +44,7 @@ export class AccountController {
   async createAccount(@Body() data: AccountDto, @Token() user: User) {
     const account = await this.accountService.createAccount(data, user);
 
-    return new CreateAccountRes(200, "계좌 생성 성공", { account })
+    return new CreateAccountRes(200, '계좌 생성 성공', { account });
   }
 
   @Get('/admin')
@@ -46,8 +56,8 @@ export class AccountController {
 
     return {
       status: 200,
-      money
-    }
+      money,
+    };
   }
 
   @Get('/admin2')
@@ -55,26 +65,32 @@ export class AccountController {
   @UseGuards(new AuthGuard())
   @ApiExcludeEndpoint()
   async getUserAccount(@Token() user: User, @Query('userId') userId: string) {
-    const account: Account = await this.accountService.getUserMoney(user, userId);
+    const account: Account = await this.accountService.getUserMoney(
+      user,
+      userId,
+    );
 
     return {
       status: 200,
-      account
-    }
+      account,
+    };
   }
 
   @Get('/other')
   @HttpCode(200)
   @UseGuards(new AuthGuard())
   @ApiOkResponse({ type: GetOtherAccount })
-  async getOtherAccount(@Query('birth') birth: string, @Query('name') name: string) {
+  async getOtherAccount(
+    @Query('birth') birth: string,
+    @Query('name') name: string,
+  ) {
     const accounts = await this.accountService.getOtherAccount(birth, name);
 
     return {
       status: 200,
       message: '조회 성공',
-      data: accounts
-    }
+      data: accounts,
+    };
   }
 
   @Post('/add')
@@ -84,18 +100,21 @@ export class AccountController {
   async addAccount(@Token() user: User, @Body() otherDto: OtherDto) {
     await this.accountService.addOtherAccount(otherDto, user);
 
-    return new BaseResponse(200, "추가 성공");
+    return new BaseResponse(200, '추가 성공');
   }
 
   @Get('/')
   @HttpCode(200)
   @UseGuards(new AuthGuard())
-  @ApiOkResponse({ description: '자신의 계좌 조회 성공', type: GetMyAccountInfoRes })
+  @ApiOkResponse({
+    description: '자신의 계좌 조회 성공',
+    type: GetMyAccountInfoRes,
+  })
   @ApiBasicAuth('authorization')
   async getMyAccounts(@Token() user: User) {
     const data: IAccount = await this.accountService.getMyAccounts(user);
 
-    return new GetMyAccountInfoRes(200, "자신의 계좌 조회 성공", data);
+    return new GetMyAccountInfoRes(200, '자신의 계좌 조회 성공', data);
   }
 
   @Get('/:phone')
@@ -105,7 +124,7 @@ export class AccountController {
   async getAccountByPhone(@Param('phone') phone: string) {
     const data: Account[] = await this.accountService.getAccountByPhone(phone);
 
-    return new GetAccounts(200, "계좌 조회 성공", data);
+    return new GetAccounts(200, '계좌 조회 성공', data);
   }
 
   @Get('/acount/:account')
@@ -116,6 +135,6 @@ export class AccountController {
     console.log(account);
     const data: Account = await this.accountService.getAccountByAcc(account);
 
-    return new GetAccount(200, "계좌 조회 성공", data);
+    return new GetAccount(200, '계좌 조회 성공', data);
   }
 }
