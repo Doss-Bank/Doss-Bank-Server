@@ -6,7 +6,7 @@ COPY package.json package.json
 
 RUN npm install
 
-volume ["usr/src/doss/public"]
+volume ["/usr/src/doss/public"]
 
 COPY . .
 
