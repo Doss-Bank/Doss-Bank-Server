@@ -29,3 +29,10 @@ export default (account: string, type: number): any => {
     }
   }
 };
+
+export const checkBankByNum = (num: number) => {
+  switch (num) {
+    case 1:
+      return TransferTo.KaKao;
+  }
+};

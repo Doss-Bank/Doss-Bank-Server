@@ -12,7 +12,7 @@ import Account from 'src/entities/Account';
 import Receive from 'src/entities/Receive';
 import Send from 'src/entities/Send';
 import { TransferTo } from 'src/enum/account';
-import checkBankUtil from 'src/lib/util/checkBankUtil';
+import checkBankUtil, { checkBankByNum } from 'src/lib/util/checkBankUtil';
 import hashPassword from 'src/lib/util/hashPassword';
 import { Connection, Repository } from 'typeorm';
 import ReceiveDto from './dto/receiveDto';
@@ -30,11 +30,19 @@ export class TransferService {
     private accountService: AccountService,
     private sendRepo: SendRepository,
     private receiveRepo: ReceiveRepository,
-  ) {}
+  ) { }
 
   public sendMoney = async (data: TransferDto) => {
     if (data.receiveAccountId === data.sendAccountId) {
       throw new ForbiddenException('본인 계좌에는 송금할 수 없습니다.');
+    }
+
+    const toBank: TransferTo = checkBankUtil(data.receiveAccountId, 0);
+
+    const checkBank = checkBankByNum(data.bank);
+
+    if (toBank !== checkBank) {
+      throw new BadRequestException('잘못된 계좌번호 혹은 은행입니다');
     }
 
     let account: Account = await this.accountService.getAccountByAccount(
@@ -51,12 +59,7 @@ export class TransferService {
       throw new BadRequestException('이체 한도 초과');
     }
 
-    let afterMoney: number;
-    if (data.type === 1) {
-      afterMoney = account.money - data.money; // 가져오기
-    } else {
-      afterMoney = account.money - data.money - 500;
-    }
+    const afterMoney: number = account.money - data.money - 500;
 
     if (afterMoney < 0) {
       throw new ForbiddenException('잔액 부족');
@@ -64,7 +67,6 @@ export class TransferService {
 
     account.money = afterMoney;
 
-    const toBank: TransferTo = checkBankUtil(data.receiveAccountId, 0);
 
     await this.connection.transaction('SERIALIZABLE', async (manager) => {
       account = await this.accountRepo.saveAccount(manager, account);

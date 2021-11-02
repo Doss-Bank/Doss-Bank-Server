@@ -28,7 +28,7 @@ export class AccountService {
     private userService: UserService,
     @InjectRepository(Other)
     private otherRepo: Repository<Other>,
-  ) {}
+  ) { }
 
   async createAccount(data: AccountDto, user: User): Promise<string> {
     const isUser: User = await this.userService.getMyInfo(user.phone);
@@ -54,11 +54,19 @@ export class AccountService {
       break;
     }
 
+    let accountType: string;
+    switch (data.type) {
+      case 1:
+        accountType = '자유 입출금';
+        break;
+    }
+
     const account: Account = this.accountRepo.create({
       account: acc,
       password: hashPassword(data.accountPW),
       name: data.name,
       money: 10000,
+      accountType: accountType,
     });
     account.user = isUser;
 

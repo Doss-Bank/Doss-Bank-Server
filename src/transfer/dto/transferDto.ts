@@ -1,7 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export default class TransferDto {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  bank!: number;
+
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
@@ -21,9 +26,4 @@ export default class TransferDto {
   @IsNumber()
   @ApiProperty()
   money!: number;
-
-  @IsOptional()
-  @IsNumber()
-  @ApiProperty()
-  type?: number; // 1 -> 가져오기, null -> 송금
 }

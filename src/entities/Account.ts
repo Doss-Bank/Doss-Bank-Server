@@ -38,6 +38,10 @@ export default class Account {
   })
   money!: number;
 
+  @ApiProperty()
+  @Column()
+  accountType: string;
+
   @JoinColumn({ name: 'fk_user_id' })
   @ManyToOne(() => User, {
     onDelete: 'CASCADE',
