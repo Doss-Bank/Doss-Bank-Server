@@ -34,7 +34,7 @@ import OtherDto from './dto/otherDto';
 @Controller('account')
 @ApiTags('Account')
 export class AccountController {
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService) {}
 
   @Post('/')
   @HttpCode(200)

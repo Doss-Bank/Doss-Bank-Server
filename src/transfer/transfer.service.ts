@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   UnauthorizedException,
@@ -43,6 +44,11 @@ export class TransferService {
 
     if (account.password !== hashPW) {
       throw new UnauthorizedException('비밀번호가 틀렸습니다');
+    }
+
+    const sendLog = await this.sendRepo.getLog(account);
+    if (sendLog[0].sum > 10000000) {
+      throw new BadRequestException('이체 한도 초과');
     }
 
     let afterMoney: number;
