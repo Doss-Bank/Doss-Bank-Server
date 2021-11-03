@@ -16,7 +16,7 @@ import generateAccount from 'src/lib/uuid';
 import Other from 'src/entities/Other';
 import { IAccount } from 'src/interface/IAccount';
 import axios from 'axios';
-import { GetAccount } from 'src/enum/account';
+import { Address, GetAccount } from 'src/enum/account';
 import OtherDto from './dto/otherDto';
 import checkBankUtil from 'src/lib/util/checkBankUtil';
 
@@ -28,7 +28,7 @@ export class AccountService {
     private userService: UserService,
     @InjectRepository(Other)
     private otherRepo: Repository<Other>,
-  ) { }
+  ) {}
 
   async createAccount(data: AccountDto, user: User): Promise<string> {
     const isUser: User = await this.userService.getMyInfo(user.phone);
@@ -203,6 +203,15 @@ export class AccountService {
         bank: checkBankUtil(account[i], 2),
       });
       await this.otherRepo.save(createOther);
+    }
+  }
+
+  async getOtherAccountByAccount(bank: number, account: string): Promise<any> {
+    if (bank === 1) {
+      const res = await axios.get(
+        `${Address.KAKAO}/account/find/id/${account}`,
+      );
+      return res.data;
     }
   }
 }

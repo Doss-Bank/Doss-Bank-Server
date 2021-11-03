@@ -12,3 +12,8 @@ export enum GetAccount {
 export enum BringAccountInfo {
   KaKao = 'http://34.64.165.105:8080/account/find/id',
 }
+
+export enum Address {
+  TOSS = 'http://localhost:8080',
+  KAKAO = 'http://34.64.165.105:8080',
+}

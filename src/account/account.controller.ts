@@ -34,7 +34,7 @@ import OtherDto from './dto/otherDto';
 @Controller('account')
 @ApiTags('Account')
 export class AccountController {
-  constructor(private accountService: AccountService) {}
+  constructor(private accountService: AccountService) { }
 
   @Post('/')
   @HttpCode(200)
@@ -57,6 +57,24 @@ export class AccountController {
     return {
       status: 200,
       money,
+    };
+  }
+
+  @Get('/other2/:bank')
+  @HttpCode(200)
+  @ApiOkResponse({})
+  async getOtherAccountByAccount(
+    @Param('bank') bank: number,
+    @Query('account') account: string,
+  ) {
+    const data = await this.accountService.getOtherAccountByAccount(
+      Number(bank),
+      account,
+    );
+
+    return {
+      status: 200,
+      data,
     };
   }
 

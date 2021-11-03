@@ -9,6 +9,7 @@ import axios from 'axios';
 import AccountRepository from 'src/account/account.repository';
 import { AccountService } from 'src/account/account.service';
 import Account from 'src/entities/Account';
+import Other from 'src/entities/Other';
 import Receive from 'src/entities/Receive';
 import Send from 'src/entities/Send';
 import { TransferTo } from 'src/enum/account';
@@ -30,6 +31,8 @@ export class TransferService {
     private accountService: AccountService,
     private sendRepo: SendRepository,
     private receiveRepo: ReceiveRepository,
+    @InjectRepository(Other)
+    private otherRepo: Repository<Other>,
   ) { }
 
   public sendMoney = async (data: TransferDto) => {
@@ -66,7 +69,6 @@ export class TransferService {
     }
 
     account.money = afterMoney;
-
 
     await this.connection.transaction('SERIALIZABLE', async (manager) => {
       account = await this.accountRepo.saveAccount(manager, account);
@@ -115,4 +117,16 @@ export class TransferService {
     createReceive.account = account;
     await this.receiveRepo.save(createReceive);
   };
+
+  public takeMoney = async (takeDto: ReceiveDto) => {
+    let receiveAccount: Account = await this.accountService.getAccountByAccount(takeDto.receiveAccountId);
+
+    let sendAccount: Other = await this.otherRepo.findOne({
+      account: takeDto.sendAccountId,
+    });
+
+    if (sendAccount === undefined) {
+      throw new BadRequestException('등록되지 않은 계좌입니다');
+    }
+  }
 }
