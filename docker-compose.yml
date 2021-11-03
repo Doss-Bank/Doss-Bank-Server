@@ -1,0 +1,26 @@
+version: "3.1"
+
+services:
+  server:
+    container_name: doss
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    network_mode: bridge
+    build: .
+    environment:
+      PORT: ${PORT}
+
+      MYSQL_DATABASE: ${DB_DB}
+      MYSQL_HOST: ${DB_HOST}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PORT: ${DB_PORT}
+
+      JWT_SECRET: ${JWT_SECRET}
+    
+    volumes:
+      - doss-public:/usr/src/doss/public
+
+volumes:
+  doss-public:
