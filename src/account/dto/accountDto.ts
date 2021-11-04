@@ -16,9 +16,4 @@ export default class AccountDto {
   @IsString()
   @ApiProperty()
   birth!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({ description: '1 = 자유 입출금, 2 = ???' })
-  type!: number;
 }

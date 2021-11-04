@@ -28,7 +28,7 @@ export class AccountService {
     private userService: UserService,
     @InjectRepository(Other)
     private otherRepo: Repository<Other>,
-  ) {}
+  ) { }
 
   async createAccount(data: AccountDto, user: User): Promise<string> {
     const isUser: User = await this.userService.getMyInfo(user.phone);
@@ -54,19 +54,19 @@ export class AccountService {
       break;
     }
 
-    let accountType: string;
-    switch (data.type) {
-      case 1:
-        accountType = '자유 입출금';
-        break;
-    }
+    // let accountType: string;
+    // switch (data.type) {
+    //   case 1:
+    //     accountType = '자유 입출금';
+    // break;
+    // }
 
     const account: Account = this.accountRepo.create({
       account: acc,
       password: hashPassword(data.accountPW),
       name: data.name,
       money: 10000,
-      accountType: accountType,
+      accountType: '자유 입출금',
     });
     account.user = isUser;
 
@@ -208,10 +208,16 @@ export class AccountService {
 
   async getOtherAccountByAccount(bank: number, account: string): Promise<any> {
     if (bank === 1) {
-      const res = await axios.get(
-        `${Address.KAKAO}/account/find/id/${account}`,
-      );
-      return res.data;
+      try {
+        const res = await axios.get(
+          `${Address.KAKAO}/account/find/id/${account}`,
+        );
+        return res.data;
+      } catch (e) {
+        throw new BadRequestException('존재하지 않은 카카오뱅크 계좌');
+      }
+    } else {
+      throw new BadRequestException('존재하지 않는 은행');
     }
   }
 }
