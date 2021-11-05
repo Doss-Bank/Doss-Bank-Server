@@ -27,6 +27,7 @@ import GetMyAccountInfoRes, {
 import BaseResponse from 'src/lib/response/BaseResponse';
 import { Token } from 'src/lib/token';
 import { AuthGuard } from 'src/middleware/authMiddleware';
+import { AccountRes } from 'src/types/type';
 import { AccountService } from './account.service';
 import AccountDto from './dto/accountDto';
 import OtherDto from './dto/otherDto';
@@ -42,9 +43,12 @@ export class AccountController {
   @ApiOkResponse({ description: '계좌 생성 성공', type: CreateAccountRes })
   @ApiBasicAuth('authorization')
   async createAccount(@Body() data: AccountDto, @Token() user: User) {
-    const account = await this.accountService.createAccount(data, user);
+    const account: AccountRes = await this.accountService.createAccount(
+      data,
+      user,
+    );
 
-    return new CreateAccountRes(200, '계좌 생성 성공', { account });
+    return new CreateAccountRes(200, '계좌 생성 성공', account);
   }
 
   @Get('/admin')

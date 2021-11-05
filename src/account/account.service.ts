@@ -19,6 +19,7 @@ import axios from 'axios';
 import { Address, GetAccount } from 'src/enum/account';
 import OtherDto from './dto/otherDto';
 import checkBankUtil from 'src/lib/util/checkBankUtil';
+import { AccountRes } from 'src/types/type';
 
 @Injectable()
 export class AccountService {
@@ -28,9 +29,9 @@ export class AccountService {
     private userService: UserService,
     @InjectRepository(Other)
     private otherRepo: Repository<Other>,
-  ) { }
+  ) {}
 
-  async createAccount(data: AccountDto, user: User): Promise<string> {
+  async createAccount(data: AccountDto, user: User): Promise<AccountRes> {
     const isUser: User = await this.userService.getMyInfo(user.phone);
 
     if (data.birth !== isUser.birth) {
@@ -72,7 +73,12 @@ export class AccountService {
 
     await this.accountRepo.save(account);
 
-    return account.account;
+    const res = {
+      account: account.account,
+      limit: 10000000,
+    };
+
+    return res;
   }
 
   async getMyAccounts(user: User): Promise<IAccount> {
@@ -90,6 +96,9 @@ export class AccountService {
         user: userData,
       },
     });
+
+    for (const idx of others) {
+    }
 
     return {
       accounts,

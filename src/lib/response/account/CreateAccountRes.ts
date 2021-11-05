@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { AccountRes } from 'src/types/type';
 import BaseResponse from '../BaseResponse';
-import { CreateAccount } from './ResponseData';
 
-export default class CreateAccountRes extends BaseResponse<CreateAccount> {
+export default class CreateAccountRes extends BaseResponse<AccountRes> {
   @ApiProperty()
-  data: CreateAccount;
+  data: AccountRes;
 }
