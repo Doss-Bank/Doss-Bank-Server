@@ -34,5 +34,7 @@ export const checkBankByNum = (num: number) => {
   switch (num) {
     case 1:
       return TransferTo.KaKao;
+    case 2:
+      return TransferTo.Toss;
   }
 };
