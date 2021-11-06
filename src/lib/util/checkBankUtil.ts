@@ -25,7 +25,7 @@ export default (account: string, type: number): any => {
   } else if (type === 2) {
     switch (bankCode) {
       case '001':
-        return '카카오뱅크';
+        return 'KaKao';
     }
   }
 };
