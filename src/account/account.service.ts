@@ -261,6 +261,10 @@ export class AccountService {
         },
       });
 
+      if (res === undefined) {
+        throw new NotFoundException('존재하지 않는 계좌번호');
+      }
+
       return res;
     } else {
       throw new BadRequestException('존재하지 않는 은행');
