@@ -79,6 +79,7 @@ export class AccountController {
     return {
       status: 200,
       data,
+      message: '조회 성공',
     };
   }
 
