@@ -16,7 +16,7 @@ import generateAccount from 'src/lib/uuid';
 import Other from 'src/entities/Other';
 import { IAccount } from 'src/interface/IAccount';
 import axios from 'axios';
-import { Address, GetAccount } from 'src/enum/account';
+import { Address, BringAccountInfo, GetAccount } from 'src/enum/account';
 import OtherDto from './dto/otherDto';
 import checkBankUtil from 'src/lib/util/checkBankUtil';
 import { AccountRes } from 'src/types/type';
@@ -68,6 +68,7 @@ export class AccountService {
       name: data.name,
       money: 10000,
       accountType: '자유 입출금',
+      bank: 'Toss',
     });
     account.user = isUser;
 
@@ -97,13 +98,32 @@ export class AccountService {
       },
     });
 
-    for (const idx of others) {
+    for (const other of others) {
+      const bank: BringAccountInfo = checkBankUtil(
+        other.account.slice(0, 3),
+        1,
+      );
+
+      await this.updateOtherAccount(bank, other.account);
     }
 
     return {
       accounts,
       others,
     };
+  }
+
+  async updateOtherAccount(bank: BringAccountInfo, account: string) {
+    const other: Other = await this.otherRepo.findOne({
+      where: {
+        account: account,
+      },
+    });
+    const res = await axios.get(bank + `/${account}`);
+
+    other.money = res.data.data.money;
+
+    await this.otherRepo.save(other);
   }
 
   async getAccountByPhone(phone: string): Promise<Account[]> {
