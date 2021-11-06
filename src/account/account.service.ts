@@ -29,7 +29,7 @@ export class AccountService {
     private userService: UserService,
     @InjectRepository(Other)
     private otherRepo: Repository<Other>,
-  ) {}
+  ) { }
 
   async createAccount(data: AccountDto, user: User): Promise<AccountRes> {
     const isUser: User = await this.userService.getMyInfo(user.phone);
@@ -37,6 +37,15 @@ export class AccountService {
     if (data.birth !== isUser.birth) {
       throw new BadRequestException('정보가 올바르지 않습니다');
     }
+
+    const limit: Account[] = await this.accountRepo.find({
+      where: {
+        user: isUser,
+      },
+    });
+
+    if (limit.length > 2)
+      throw new BadRequestException('계좌는 2개까지만 생성할 수 있습니다');
 
     let acc: string;
     while (true) {
@@ -245,6 +254,14 @@ export class AccountService {
       } catch (e) {
         throw new BadRequestException('존재하지 않은 카카오뱅크 계좌');
       }
+    } else if (bank === 2) {
+      const res = await this.accountRepo.findOne({
+        where: {
+          account: account,
+        },
+      });
+
+      return res;
     } else {
       throw new BadRequestException('존재하지 않는 은행');
     }
