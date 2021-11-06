@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export default class TransferDto {
   @IsNotEmpty()
-  @IsString()
+  @IsNumber()
   @ApiProperty()
   bank!: number;
 
