@@ -83,9 +83,10 @@ export class AccountService {
 
     await this.accountRepo.save(account);
 
-    const res = {
+    const res: AccountRes = {
       account: account.account,
       limit: 10000000,
+      type: account.accountType,
     };
 
     return res;
