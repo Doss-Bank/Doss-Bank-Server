@@ -15,6 +15,7 @@ import ReceiveRepository from './repos/receive.repository';
 import { SendSubscriber } from './subscriber/send.subscriber';
 import { ReceiveSubscriber } from './subscriber/receive.subsriber';
 import Other from 'src/entities/Other';
+import OtherRepository from 'src/account/other.repository';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import Other from 'src/entities/Other';
       SendRepository,
       ReceiveRepository,
       Other,
+      OtherRepository,
     ]),
     SseModule,
   ],

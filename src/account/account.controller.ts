@@ -150,7 +150,7 @@ export class AccountController {
     return new GetMyAccountInfoRes(200, '자신의 계좌 조회 성공', data);
   }
 
-  @Get('/:phone')
+  @Get('/get/:phone')
   @HttpCode(200)
   @ApiOkResponse({ description: '계좌 조회 성공', type: GetAccounts })
   @ApiNotFoundResponse({ description: '존재하지 않는 전화번호' })

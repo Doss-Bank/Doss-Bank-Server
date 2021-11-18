@@ -34,4 +34,13 @@ export class TransferController {
 
     return new BaseResponse(200, '수신 완료');
   }
+
+  @Post('/take')
+  @HttpCode(200)
+  @ApiOkResponse({})
+  async takeMoney(@Body() takeDto: ReceiveDto) {
+    await this.transService.takeMoney(takeDto);
+
+    return new BaseResponse(200, '가져오기 성공');
+  }
 }

@@ -9,6 +9,11 @@ export enum GetAccount {
   KaKao = 'http://34.64.165.105:8080/account/find/phone',
 }
 
+export enum Take {
+  KaKao = 'http://34.64.165.105:8080/remittance/send',
+  Toss = 'http://localhost:8080/transfer/send',
+}
+
 export enum BringAccountInfo {
   KaKao = 'http://34.64.165.105:8080/account/find/id',
 }

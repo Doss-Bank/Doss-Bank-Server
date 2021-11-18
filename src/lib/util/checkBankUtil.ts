@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { BringAccountInfo, TransferTo } from 'src/enum/account';
+import { BringAccountInfo, Take, TransferTo } from 'src/enum/account';
 
 export default (account: string, type: number): any => {
   const bankCode: string = account.slice(0, 3);
@@ -26,6 +26,13 @@ export default (account: string, type: number): any => {
     switch (bankCode) {
       case '001':
         return 'KaKao';
+    }
+  } else if (type === 3) {
+    switch (bankCode) {
+      case '001':
+        return Take.KaKao;
+      case '002':
+        return Take.Toss;
     }
   }
 };

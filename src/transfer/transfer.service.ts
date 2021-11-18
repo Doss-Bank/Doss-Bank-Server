@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import AccountRepository from 'src/account/account.repository';
 import { AccountService } from 'src/account/account.service';
+import OtherRepository from 'src/account/other.repository';
 import Account from 'src/entities/Account';
 import Other from 'src/entities/Other';
 import Receive from 'src/entities/Receive';
@@ -33,7 +34,8 @@ export class TransferService {
     private receiveRepo: ReceiveRepository,
     @InjectRepository(Other)
     private otherRepo: Repository<Other>,
-  ) { }
+    private otherRepository: OtherRepository,
+  ) {}
 
   public sendMoney = async (data: TransferDto) => {
     if (data.receiveAccountId === data.sendAccountId) {
@@ -119,14 +121,63 @@ export class TransferService {
   };
 
   public takeMoney = async (takeDto: ReceiveDto) => {
-    let receiveAccount: Account = await this.accountService.getAccountByAccount(takeDto.receiveAccountId);
+    const receiveAccount: Account =
+      await this.accountService.getAccountByAccount(takeDto.receiveAccountId);
 
-    let sendAccount: Other = await this.otherRepo.findOne({
-      account: takeDto.sendAccountId,
-    });
+    let sendAccount;
+
+    if (takeDto.sendAccountId.slice(0, 3) === '002') {
+      sendAccount = await this.accountService.getAccountByAccount(
+        takeDto.sendAccountId,
+      );
+    } else {
+      sendAccount = await this.otherRepo.findOne({
+        account: takeDto.sendAccountId,
+      });
+    }
 
     if (sendAccount === undefined) {
       throw new BadRequestException('등록되지 않은 계좌입니다');
     }
-  }
+
+    const afterMoney: number = sendAccount.money - takeDto.money;
+
+    if (afterMoney < 0) {
+      throw new ForbiddenException('잔액 부족');
+    }
+
+    sendAccount.money = afterMoney;
+
+    const toBank: TransferTo = checkBankUtil(takeDto.receiveAccountId, 3);
+
+    await this.connection.transaction('SERIALIZABLE', async (manager) => {
+      if (takeDto.receiveAccountId.slice(0, 3) === '002') {
+        receiveAccount.money += takeDto.money;
+        await this.accountRepo.save(receiveAccount);
+
+        sendAccount = await this.accountRepo.saveAccount(manager, sendAccount);
+      } else {
+        const res = await axios.post(
+          toBank,
+          {
+            sendAccountId: takeDto.sendAccountId,
+            receiveAccountId: takeDto.receiveAccountId,
+            money: takeDto.money,
+          },
+          {
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+            },
+          },
+        );
+
+        if (res.data.status === 200) {
+          sendAccount = await this.otherRepository.saveAccount(
+            manager,
+            sendAccount,
+          );
+        }
+      }
+    });
+  };
 }
