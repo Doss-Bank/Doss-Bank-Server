@@ -18,6 +18,7 @@ import checkBankUtil, { checkBankByNum } from 'src/lib/util/checkBankUtil';
 import hashPassword from 'src/lib/util/hashPassword';
 import { Connection, Repository } from 'typeorm';
 import ReceiveDto from './dto/receiveDto';
+import TakeDto from './dto/takeDto';
 import TransferDto from './dto/transferDto';
 import ReceiveRepository from './repos/receive.repository';
 import SendRepository from './repos/send.repository';
@@ -120,7 +121,7 @@ export class TransferService {
     await this.receiveRepo.save(createReceive);
   };
 
-  public takeMoney = async (takeDto: ReceiveDto) => {
+  public takeMoney = async (takeDto: TakeDto) => {
     const receiveAccount: Account =
       await this.accountService.getAccountByAccount(takeDto.receiveAccountId);
 
@@ -163,6 +164,7 @@ export class TransferService {
             sendAccountId: takeDto.sendAccountId,
             receiveAccountId: takeDto.receiveAccountId,
             money: takeDto.money,
+            sendAccountPw: takeDto.sendAccountPw,
           },
           {
             headers: {

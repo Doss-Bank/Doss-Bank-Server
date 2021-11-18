@@ -7,6 +7,7 @@ import {
 } from '@nestjs/swagger';
 import BaseResponse from 'src/lib/response/BaseResponse';
 import ReceiveDto from './dto/receiveDto';
+import TakeDto from './dto/takeDto';
 import TransferDto from './dto/transferDto';
 import { TransferService } from './transfer.service';
 
@@ -38,7 +39,7 @@ export class TransferController {
   @Post('/take')
   @HttpCode(200)
   @ApiOkResponse({})
-  async takeMoney(@Body() takeDto: ReceiveDto) {
+  async takeMoney(@Body() takeDto: TakeDto) {
     await this.transService.takeMoney(takeDto);
 
     return new BaseResponse(200, '가져오기 성공');
