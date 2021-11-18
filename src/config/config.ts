@@ -13,6 +13,6 @@ export const dbConfig = {
 };
 
 export const ENDPOINT = {
-  SERVER: 'http://34.64.79.162:8080/',
+  SERVER: 'http://34.64.140.124:8080/',
   JBSERVER: `http://34.64.251.169:8081/`,
 };
