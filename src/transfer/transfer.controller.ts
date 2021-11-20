@@ -14,7 +14,7 @@ import { TransferService } from './transfer.service';
 @Controller('transfer')
 @ApiTags('transfer')
 export class TransferController {
-  constructor(private transService: TransferService) {}
+  constructor(private transService: TransferService) { }
 
   @Post('/send')
   @HttpCode(200)
@@ -38,7 +38,7 @@ export class TransferController {
 
   @Post('/take')
   @HttpCode(200)
-  @ApiOkResponse({})
+  @ApiOkResponse({ description: '가져오기 성공', type: BaseResponse })
   async takeMoney(@Body() takeDto: TakeDto) {
     await this.transService.takeMoney(takeDto);
 
