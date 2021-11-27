@@ -11,15 +11,19 @@ import User from './User';
 
 @Entity('other')
 export default class Other {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   idx!: number;
 
+  @ApiProperty()
   @Column()
   account!: string;
 
+  @ApiProperty()
   @Column()
   bank!: string;
 
+  @ApiProperty()
   @Column()
   money!: string;
 

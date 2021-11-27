@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   CreateDateColumn,
@@ -11,15 +12,20 @@ import Account from './Account';
 
 @Entity('send')
 export default class Send {
+
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   idx!: number;
 
+  @ApiProperty()
   @Column()
   toAccount!: string;
 
+  @ApiProperty()
   @Column()
   fromAccount!: string;
 
+  @ApiProperty()
   @Column()
   money!: number;
 
@@ -30,9 +36,11 @@ export default class Send {
   })
   account!: Account;
 
+  @ApiProperty()
   @RelationId((send: Send) => send.account)
   accountIdx!: number;
 
+  @ApiProperty()
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 }

@@ -26,7 +26,7 @@ export class UserService {
     private userRepository: Repository<User>,
     @Inject(forwardRef(() => PasswordService))
     private pwService: PasswordService,
-  ) {}
+  ) { }
 
   async register(registerDto: RegisterDto): Promise<ResToken> {
     const id: User | undefined = await this.userRepository.findOne({

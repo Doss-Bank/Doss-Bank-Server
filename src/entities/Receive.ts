@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   Entity,
@@ -10,15 +11,19 @@ import Account from './Account';
 
 @Entity('receive')
 export default class Receive {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   idx!: number;
 
+  @ApiProperty()
   @Column()
   toAccount!: string;
 
+  @ApiProperty()
   @Column()
   fromAccount!: string;
 
+  @ApiProperty()
   @Column()
   money!: number;
 
@@ -29,6 +34,7 @@ export default class Receive {
   })
   account!: Account;
 
+  @ApiProperty()
   @RelationId((receive: Receive) => receive.account)
   accountIdx!: number;
 }
