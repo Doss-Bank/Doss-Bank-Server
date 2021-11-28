@@ -18,7 +18,7 @@ export default class TakeDto {
   money!: number;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   @ApiProperty()
   sendAccountPw!: string;
 }
