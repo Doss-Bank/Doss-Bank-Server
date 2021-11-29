@@ -29,7 +29,7 @@ export class AccountService {
     private userService: UserService,
     @InjectRepository(Other)
     private otherRepo: Repository<Other>,
-  ) {}
+  ) { }
 
   async createAccount(data: AccountDto, user: User): Promise<AccountRes> {
     const isUser: User = await this.userService.getMyInfo(user.phone);
@@ -44,7 +44,7 @@ export class AccountService {
       },
     });
 
-    if (limit.length > 2)
+    if (limit.length >= 2)
       throw new BadRequestException('계좌는 2개까지만 생성할 수 있습니다');
 
     let acc: string;

@@ -131,6 +131,10 @@ export class TransferService {
       sendAccount = await this.accountService.getAccountByAccount(
         takeDto.sendAccountId,
       );
+
+      if (hashPassword(takeDto.sendAccountPw) !== sendAccount.password) {
+        throw new BadRequestException('비밀번호가 틀렸습니다');
+      }
     } else {
       sendAccount = await this.otherRepo.findOne({
         account: takeDto.sendAccountId,
