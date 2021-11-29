@@ -36,7 +36,7 @@ export class TransferService {
     @InjectRepository(Other)
     private otherRepo: Repository<Other>,
     private otherRepository: OtherRepository,
-  ) {}
+  ) { }
 
   public sendMoney = async (data: TransferDto) => {
     if (data.receiveAccountId === data.sendAccountId) {
@@ -154,7 +154,7 @@ export class TransferService {
     await this.connection.transaction('SERIALIZABLE', async (manager) => {
       if (takeDto.receiveAccountId.slice(0, 3) === '002') {
         receiveAccount.money += takeDto.money;
-        await this.accountRepo.save(receiveAccount);
+        await this.accountRepo.saveAccount(manager, receiveAccount); //a
 
         sendAccount = await this.accountRepo.saveAccount(manager, sendAccount);
       } else {
