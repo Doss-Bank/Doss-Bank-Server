@@ -37,4 +37,8 @@ export default class Receive {
   @ApiProperty()
   @RelationId((receive: Receive) => receive.account)
   accountIdx!: number;
+
+  @ApiProperty()
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt!: Date;
 }
