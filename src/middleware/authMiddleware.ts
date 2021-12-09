@@ -27,6 +27,7 @@ export class AuthGuard implements CanActivate {
       const verify: User = tokenLib.verifyToken(token) as User;
       return verify;
     } catch (error) {
+      console.log(error.message);
       switch (error.message) {
         case 'invalid signature':
         case 'invalid token':
